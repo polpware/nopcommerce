@@ -77,6 +77,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.YaoseeOAuth.WebApi", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.YaoseeOAuth.WebFramework", "Polpware\OAuth\Nop.YaoseeOAuth.WebFramework\Nop.YaoseeOAuth.WebFramework.csproj", "{550E3091-8867-4E1A-B4E6-929A236FC38D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{66507A59-851D-4163-B741-FB1DD6DE89D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polpware.Plugin.OAuth2Flow", "Polpware\Plugins\Polpware.Plugin.OAuth2Flow\Polpware.Plugin.OAuth2Flow.csproj", "{78E6971A-4441-45E3-B40C-1A4262336353}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -421,6 +425,18 @@ Global
 		{550E3091-8867-4E1A-B4E6-929A236FC38D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{550E3091-8867-4E1A-B4E6-929A236FC38D}.Release|x86.ActiveCfg = Release|Any CPU
 		{550E3091-8867-4E1A-B4E6-929A236FC38D}.Release|x86.Build.0 = Release|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Debug|x86.Build.0 = Debug|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Release|x86.ActiveCfg = Release|Any CPU
+		{78E6971A-4441-45E3-B40C-1A4262336353}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -458,6 +474,8 @@ Global
 		{D4C4B427-F68C-467A-8781-997C2666A2B7} = {2E23F206-AA87-40A1-B7FB-819B5A5B28EC}
 		{A228E424-3E62-4B17-AF25-3C8936118D28} = {2E23F206-AA87-40A1-B7FB-819B5A5B28EC}
 		{550E3091-8867-4E1A-B4E6-929A236FC38D} = {2E23F206-AA87-40A1-B7FB-819B5A5B28EC}
+		{66507A59-851D-4163-B741-FB1DD6DE89D6} = {157A6C1E-7028-44AF-8806-6B2036DCE7C2}
+		{78E6971A-4441-45E3-B40C-1A4262336353} = {66507A59-851D-4163-B741-FB1DD6DE89D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}
