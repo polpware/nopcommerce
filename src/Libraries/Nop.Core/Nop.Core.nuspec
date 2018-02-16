@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nop.Core</id>
+    <version>4.0.0.0-spt</version>
+    <title>Nop.Core</title>
+    <authors>NopCommerce</authors>
+    <owners>NopCommerce</owners>
+    <licenseUrl>https://github.com/nopSolutions/nopCommerce</licenseUrl>
+    <projectUrl>https://github.com/nopSolutions/nopCommerce</projectUrl>
+    <iconUrl>https://github.com/nopSolutions/nopCommerce</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Nop Core Lib</description>
+    <releaseNotes>Todo.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>NopCommerce</tags>
+  </metadata>
+</package>
