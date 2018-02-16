@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nop.Services</id>
+    <version>3.7.0.0</version>
+    <title>Nop.Services</title>
+    <authors>NopCommerce</authors>
+    <owners>NopCommerce</owners>
+    <licenseUrl>https://github.com/nopSolutions/nopCommerce</licenseUrl>
+    <projectUrl>https://github.com/nopSolutions/nopCommerce</projectUrl>
+    <iconUrl>https://github.com/nopSolutions/nopCommerce</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Nop Services Lib</description>
+    <releaseNotes>Todo.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>NopCommerce</tags>
+  </metadata>
+</package>
