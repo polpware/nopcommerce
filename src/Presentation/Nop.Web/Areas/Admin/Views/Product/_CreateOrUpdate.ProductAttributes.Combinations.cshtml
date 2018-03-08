@@ -1,6 +1,6 @@
-﻿@model ProductModel
+@model ProductModel
 
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_top", additionalData = Model })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsTop, additionalData = Model })
 <div class="panel panel-default">
     <div class="panel-body">
         <p>
@@ -9,7 +9,7 @@
 
         <div id="attributecombinations-grid"></div>
 
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $("#attributecombinations-grid").kendoGrid({
                     dataSource: {
@@ -149,6 +149,9 @@
         <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
         </button>
+        <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn bg-aqua">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
+        </button>
         <input type="submit" id="btnRefreshCombinations" style="display: none"/>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -192,4 +195,4 @@
         </script>
     </div>
 </div>
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_bottom", additionalData = Model })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsBottom, additionalData = Model })

@@ -1,15 +1,15 @@
-﻿@model ProductAttributeCombinationModel
+@model ProductAttributeCombinationModel
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.ProductId, sku: $(this).val() });
@@ -34,7 +34,7 @@
     <input asp-for="Id" type="hidden" />
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_combination_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
@@ -128,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_combination_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

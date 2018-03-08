@@ -1,4 +1,4 @@
-﻿@model CatalogSettingsModel
+@model CatalogSettingsModel
 
 @{
     //page title
@@ -18,7 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsButtons })
         </div>
     </div>
 
@@ -29,7 +29,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")
@@ -110,7 +110,7 @@
                             </div>
                         </nop-nested-setting>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
                             $("#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
@@ -238,7 +238,7 @@
                             </div>
                         </div>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
 
@@ -355,7 +355,7 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.ShowShareButton)").click(togglePageShareCode);
                                 togglePageShareCode();
@@ -408,7 +408,7 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
                                 toggleCompareProductsEnabled();
@@ -733,7 +733,7 @@
                         </nop-nested-setting>                        
                     </div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
                             $("#@Html.IdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
@@ -934,6 +934,16 @@
                                 <span asp-validation-for="ExportImportAllowDownloadImages"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportSplitProductsFile_OverrideForStore" asp-input="ExportImportSplitProductsFile" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportSplitProductsFile" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportSplitProductsFile" />
+                                <span asp-validation-for="ExportImportSplitProductsFile"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
@@ -953,7 +963,7 @@
                         </div>
                         <div id="sortoptions-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#sortoptions-grid").kendoGrid({
                                     dataSource: {
@@ -1047,7 +1057,7 @@
                         </script>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsBottom })
             </div>
         </div>
     </div>

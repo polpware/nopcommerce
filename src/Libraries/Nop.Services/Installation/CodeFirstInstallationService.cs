@@ -5903,8 +5903,9 @@ namespace Nop.Services.Installation
             {
                 UseSystemEmailForContactUsForm = true,
                 UseStoredProceduresIfSupported = true,
-                UseStoredProcedureForLoadingCategories = false,
+                UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
+                SitemapPageSize = 200,
                 SitemapIncludeCategories = true,
                 SitemapIncludeManufacturers = true,
                 SitemapIncludeProducts = false,
@@ -6003,7 +6004,7 @@ namespace Nop.Services.Installation
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
                 UseRichEditorInMessageTemplates = false,
-                UseIsoDateTimeConverterInJson = true,
+                UseIsoDateFormatInJsonResult = true,
                 UseNestedSetting = true
             });
 
@@ -6033,7 +6034,7 @@ namespace Nop.Services.Installation
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
                 ShowShareButton = true,
-                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
+                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
@@ -6091,7 +6092,9 @@ namespace Nop.Services.Installation
                 ProductReviewsSortByCreatedDateAscending = true,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
-                ExportImportUseDropdownlistsForAssociatedEntities = true
+                ExportImportUseDropdownlistsForAssociatedEntities = true,
+                ExportImportProductsCountInOneFile = 500,
+                ExportImportSplitProductsFile = false
             });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -6140,6 +6143,8 @@ namespace Nop.Services.Installation
                 StreetAddress2Enabled = false,
                 ZipPostalCodeEnabled = false,
                 CityEnabled = false,
+                CountyEnabled = false,
+                CountyRequired = false,
                 CountryEnabled = false,
                 CountryRequired = false,
                 StateProvinceEnabled = false,
@@ -6170,6 +6175,8 @@ namespace Nop.Services.Installation
                 ZipPostalCodeRequired = true,
                 CityEnabled = true,
                 CityRequired = true,
+                CountyEnabled = false,
+                CountyRequired = false,
                 CountryEnabled = true,
                 StateProvinceEnabled = true,
                 PhoneEnabled = true,
@@ -6225,8 +6232,11 @@ namespace Nop.Services.Installation
                 Enabled = true,
                 ExchangeRate = 1,
                 PointsForRegistration = 0,
+                RegistrationPointsValidity = 30,
                 PointsForPurchases_Amount = 10,
                 PointsForPurchases_Points = 1,
+                MinOrderTotalToAwardPoints = 0,
+                PurchasesPointsValidity = 45,
                 ActivationDelay = 0,
                 ActivationDelayPeriodId = 0,
                 DisplayHowMuchWillBeEarned = true,
@@ -6346,7 +6356,8 @@ namespace Nop.Services.Installation
                 ReturnValidOptionsIfThereAreAny = true,
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true,
-                ConsiderAssociatedProductsDimensions = true
+                ConsiderAssociatedProductsDimensions = true,
+                ShipSeparatelyOneItemEach = true
             });
 
             settingService.SaveSetting(new PaymentSettings
@@ -6496,6 +6507,25 @@ namespace Nop.Services.Installation
                 DisplayBlogMenuItem = !installSampleData,
                 DisplayForumsMenuItem = !installSampleData,
                 DisplayContactUsMenuItem = !installSampleData
+            });
+
+            settingService.SaveSetting(new DisplayDefaultFooterItemSettings
+            {
+                DisplaySitemapFooterItem = true,
+                DisplayContactUsFooterItem = true,
+                DisplayProductSearchFooterItem = true,
+                DisplayNewsFooterItem = true,
+                DisplayBlogFooterItem = true,
+                DisplayForumsFooterItem = true,
+                DisplayRecentlyViewedProductsFooterItem = true,
+                DisplayCompareProductsFooterItem = true,
+                DisplayNewProductsFooterItem = true,
+                DisplayCustomerInfoFooterItem = true,
+                DisplayCustomerOrdersFooterItem = true,
+                DisplayCustomerAddressesFooterItem = true,
+                DisplayShoppingCartFooterItem = true,
+                DisplayWishlistFooterItem = true,
+                DisplayApplyVendorAccountFooterItem = true
             });
         }
 
@@ -10857,7 +10887,7 @@ namespace Nop.Services.Installation
                     Language = defaultLanguage,
                     Title = "About nopCommerce",
                     Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
-                    Full = "<p>For full feature list go to <a href=\"http://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
+                    Full = "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
                     Published = true,
                     CreatedOnUtc = DateTime.UtcNow,
                 },
@@ -11139,6 +11169,18 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "AddNewVendorAttribute",
+                    Enabled = true,
+                    Name = "Add a new vendor attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewVendorAttributeValue",
+                    Enabled = true,
+                    Name = "Add a new vendor attribute value"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "AddNewWarehouse",
                     Enabled = true,
                     Name = "Add a new warehouse"
@@ -11379,6 +11421,18 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "DeleteVendorAttribute",
+                    Enabled = true,
+                    Name = "Delete a vendor attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteVendorAttributeValue",
+                    Enabled = true,
+                    Name = "Delete a vendor attribute value"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "DeleteWarehouse",
                     Enabled = true,
                     Name = "Delete a warehouse"
@@ -11604,6 +11658,18 @@ namespace Nop.Services.Installation
                     SystemKeyword = "EditVendor",
                     Enabled = true,
                     Name = "Edit a vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditVendorAttribute",
+                    Enabled = true,
+                    Name = "Edit a vendor attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditVendorAttributeValue",
+                    Enabled = true,
+                    Name = "Edit a vendor attribute value"
                 },
                 new ActivityLogType
                 {
