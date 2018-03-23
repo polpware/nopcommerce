@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Web;
-using System.Web.Mvc;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -14,6 +18,7 @@ using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
@@ -32,14 +37,17 @@ namespace Nop.Web.Controllers
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IVendorAttributeParser _vendorAttributeParser;
+        private readonly IVendorAttributeService _vendorAttributeService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
-
+        
         #endregion
-
-        #region Constructors
+        
+        #region Ctor
 
         public VendorController(IVendorModelFactory vendorModelFactory,
             IWorkContext workContext,
@@ -49,6 +57,9 @@ namespace Nop.Web.Controllers
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
             IPictureService pictureService,
+            IGenericAttributeService genericAttributeService,
+            IVendorAttributeParser vendorAttributeParser,
+            IVendorAttributeService vendorAttributeService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
             CaptchaSettings captchaSettings)
@@ -61,17 +72,19 @@ namespace Nop.Web.Controllers
             this._vendorService = vendorService;
             this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
+            this._genericAttributeService = genericAttributeService;
+            this._vendorAttributeParser = vendorAttributeParser;
+            this._vendorAttributeService = vendorAttributeService;
 
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
             this._captchaSettings = captchaSettings;
         }
-
+        
         #endregion
-
-        #region Utilites
-
-        [NonAction]
+        
+        #region Utilities
+        
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
         {
             var picture = _pictureService.GetPictureById(vendor.PictureId);
@@ -79,34 +92,114 @@ namespace Nop.Web.Controllers
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
         }
 
+        protected virtual string ParseVendorAttributes(IFormCollection form)
+        {
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            var attributesXml = "";
+            var attributes = _vendorAttributeService.GetAllVendorAttributes();
+            foreach (var attribute in attributes)
+            {
+                var controlId = $"vendor_attribute_{attribute.Id}";
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                )
+                                {
+                                    var selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var enteredText = ctrlAttributes.ToString().Trim();
+                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.FileUpload:
+                    //not supported vendor attributes
+                    default:
+                        break;
+                }
+            }
+
+            return attributesXml;
+        }
+
         #endregion
 
         #region Methods
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult ApplyVendor()
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return Challenge();
 
             var model = new ApplyVendorModel();
-            model = _vendorModelFactory.PrepareApplyVendorModel(model, true, false);
+            model = _vendorModelFactory.PrepareApplyVendorModel(model, true, false, null);
             return View(model);
         }
 
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
-        [CaptchaValidator]
-        public virtual ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
+        [ValidateCaptcha]
+        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return Challenge();
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
@@ -114,7 +207,7 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            int pictureId = 0;
+            var pictureId = 0;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
@@ -132,6 +225,11 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.Picture.ErrorMessage"));
                 }
             }
+
+            //vendor attributes
+            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
+                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
             if (ModelState.IsValid)
             {
@@ -162,6 +260,9 @@ namespace Nop.Web.Controllers
                 //update picture seo file name
                 UpdatePictureSeoNames(vendor);
 
+                //save vendor attributes
+                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
+
                 //notify store owner here (email)
                 _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotification(_workContext.CurrentCustomer,
                     vendor, _localizationSettings.DefaultAdminLanguageId);
@@ -172,15 +273,15 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _vendorModelFactory.PrepareApplyVendorModel(model, false, true);
+            model = _vendorModelFactory.PrepareApplyVendorModel(model, false, true, vendorAttributesXml);
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult Info()
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -192,12 +293,11 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         [FormValueRequired("save-info-button")]
-        public virtual ActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
+        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -221,6 +321,11 @@ namespace Nop.Web.Controllers
             var vendor = _workContext.CurrentVendor;
             var prevPicture = _pictureService.GetPictureById(vendor.PictureId);
 
+            //vendor attributes
+            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
+                .ForEach(warning =>  ModelState.AddModelError(string.Empty, warning));
+
             if (ModelState.IsValid)
             {
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
@@ -242,6 +347,9 @@ namespace Nop.Web.Controllers
 
                 _vendorService.UpdateVendor(vendor);
 
+                //save vendor attributes
+                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
+
                 //notifications
                 if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
                     _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
@@ -250,18 +358,17 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _vendorModelFactory.PrepareVendorInfoModel(model, true);
+            model = _vendorModelFactory.PrepareVendorInfoModel(model, true, vendorAttributesXml);
             return View(model);
         }
 
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         [FormValueRequired("remove-picture")]
-        public virtual ActionResult RemovePicture()
+        public virtual IActionResult RemovePicture()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -281,7 +388,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToAction("Info");
         }
-
+        
         #endregion
     }
 }

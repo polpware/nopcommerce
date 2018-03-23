@@ -2,29 +2,34 @@ using System;
 using System.Linq;
 using System.Net;
 using Nop.Core.Configuration;
-using RedLock;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Redis connection wrapper implementation
+    /// Represents Redis connection wrapper implementation
     /// </summary>
     public class RedisConnectionWrapper : IRedisConnectionWrapper
     {
         #region Fields
 
         private readonly NopConfig _config;
-        private readonly Lazy<string> _connectionString;
 
+        private readonly Lazy<string> _connectionString;
         private volatile ConnectionMultiplexer _connection;
-        private volatile RedisLockFactory _redisLockFactory;
+        private volatile RedLockFactory _redisLockFactory;
         private readonly object _lock = new object();
 
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="config">Config</param>
         public RedisConnectionWrapper(NopConfig config)
         {
             this._config = config;
@@ -57,11 +62,8 @@ namespace Nop.Core.Caching
             {
                 if (_connection != null && _connection.IsConnected) return _connection;
 
-                if (_connection != null)
-                {
-                    //Connection disconnected. Disposing connection...
-                    _connection.Dispose();
-                }
+                //Connection disconnected. Disposing connection...
+                _connection?.Dispose();
 
                 //Creating new instance of Redis Connection
                 _connection = ConnectionMultiplexer.Connect(_connectionString.Value);
@@ -71,34 +73,26 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Create instance of RedisLockFactory
+        /// Create instance of RedLock factory
         /// </summary>
-        /// <returns>RedisLockFactory</returns>
-        protected RedisLockFactory CreateRedisLockFactory()
+        /// <returns>RedLock factory</returns>
+        protected RedLockFactory CreateRedisLockFactory()
         {
-            //get password and value whether to use ssl from connection string
-            var password = string.Empty;
-            var useSsl = false;
-            foreach (var option in GetConnectionString().Split(',').Where(option => option.Contains('=')))
-            {
-                switch (option.Substring(0, option.IndexOf('=')).Trim().ToLowerInvariant())
-                {
-                    case "password":
-                        password = option.Substring(option.IndexOf('=') + 1).Trim();
-                        break;
-                    case "ssl":
-                        bool.TryParse(option.Substring(option.IndexOf('=') + 1).Trim(), out useSsl);
-                        break;
-                }
-            }
-
-            //create RedisLockFactory for using Redlock distributed lock algorithm
-            return new RedisLockFactory(GetEndPoints().Select(endPoint => new RedisLockEndPoint
+            //get RedLock endpoints
+            var configurationOptions = ConfigurationOptions.Parse(_connectionString.Value);
+            var redLockEndPoints = GetEndPoints().Select(endPoint => new RedLockEndPoint
             {
                 EndPoint = endPoint,
-                Password = password,
-                Ssl = useSsl
-            }));
+                Password = configurationOptions.Password,
+                Ssl = configurationOptions.Ssl,
+                RedisDatabase = configurationOptions.DefaultDatabase,
+                ConfigCheckSeconds = configurationOptions.ConfigCheckSeconds,
+                ConnectionTimeout = configurationOptions.ConnectTimeout,
+                SyncTimeout = configurationOptions.SyncTimeout
+            }).ToList();
+
+            //create RedLock factory to use RedLock distributed lock algorithm
+            return RedLockFactory.Create(redLockEndPoints);
         }
 
         #endregion
@@ -106,13 +100,13 @@ namespace Nop.Core.Caching
         #region Methods
 
         /// <summary>
-        /// Obtain an interactive connection to a database inside redis
+        /// Obtain an interactive connection to a database inside Redis
         /// </summary>
         /// <param name="db">Database number; pass null to use the default value</param>
         /// <returns>Redis cache database</returns>
         public IDatabase GetDatabase(int? db = null)
         {
-            return GetConnection().GetDatabase(db ?? -1); //_settings.DefaultDb);
+            return GetConnection().GetDatabase(db ?? -1);
         }
 
         /// <summary>
@@ -137,14 +131,14 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value<</param>
+        /// <param name="db">Database number; pass null to use the default value</param>
         public void FlushDatabase(int? db = null)
         {
             var endPoints = GetEndPoints();
 
             foreach (var endPoint in endPoints)
             {
-                GetServer(endPoint).FlushDatabase(db ?? -1); //_settings.DefaultDb);
+                GetServer(endPoint).FlushDatabase(db ?? -1);
             }
         }
 
@@ -158,7 +152,7 @@ namespace Nop.Core.Caching
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             //use RedLock library
-            using (var redisLock = _redisLockFactory.Create(resource, expirationTime))
+            using (var redisLock = _redisLockFactory.CreateLock(resource, expirationTime))
             {
                 //ensure that lock is acquired
                 if (!redisLock.IsAcquired)
@@ -166,6 +160,7 @@ namespace Nop.Core.Caching
 
                 //perform action
                 action();
+
                 return true;
             }
         }
@@ -176,12 +171,10 @@ namespace Nop.Core.Caching
         public void Dispose()
         {
             //dispose ConnectionMultiplexer
-            if (_connection != null)
-                _connection.Dispose();
+            _connection?.Dispose();
 
-            //dispose RedisLockFactory
-            if (_redisLockFactory != null)
-                _redisLockFactory.Dispose();
+            //dispose RedLock factory
+            _redisLockFactory?.Dispose();
         }
 
         #endregion

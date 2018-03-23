@@ -17,9 +17,10 @@ namespace Nop.Core
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        public PagedList(IQueryable<T> source, int pageIndex, int pageSize, bool getOnlyTotalCount = false)
         {
-            int total = source.Count();
+            var total = source.Count();
             this.TotalCount = total;
             this.TotalPages = total / pageSize;
 
@@ -28,6 +29,8 @@ namespace Nop.Core
 
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
+            if(getOnlyTotalCount)
+                return;
             this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
@@ -70,15 +73,32 @@ namespace Nop.Core
             this.AddRange(source);
         }
 
-        public int PageIndex { get; private set; }
-        public int PageSize { get; private set; }
-        public int TotalCount { get; private set; }
-        public int TotalPages { get; private set; }
-
+        /// <summary>
+        /// Page index
+        /// </summary>
+        public int PageIndex { get; }
+        /// <summary>
+        /// Page size
+        /// </summary>
+        public int PageSize { get; }
+        /// <summary>
+        /// Total count
+        /// </summary>
+        public int TotalCount { get; }
+        /// <summary>
+        /// Total pages
+        /// </summary>
+        public int TotalPages { get; }
+        /// <summary>
+        /// Has previous page
+        /// </summary>
         public bool HasPreviousPage
         {
             get { return (PageIndex > 0); }
         }
+        /// <summary>
+        /// Has next page
+        /// </summary>
         public bool HasNextPage
         {
             get { return (PageIndex + 1 < TotalPages); }

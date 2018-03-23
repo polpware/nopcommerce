@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -10,8 +11,8 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
@@ -32,7 +33,7 @@ namespace Nop.Services.Tests.Catalog
         private IPriceCalculationService _priceCalcService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private ICacheManager _cacheManager;
+        private IStaticCacheManager _cacheManager;
 
         private Store _store;
 
@@ -70,10 +71,17 @@ namespace Nop.Services.Tests.Catalog
                 _catalogSettings);
 
             var nopEngine = MockRepository.GenerateMock<NopEngine>();
-            var containe = MockRepository.GenerateMock<IContainer>();
-            var containerManager = MockRepository.GenerateMock<ContainerManager>(containe);
-            nopEngine.Expect(x => x.ContainerManager).Return(containerManager);
-            containerManager.Expect(x => x.Resolve<IWorkContext>()).Return(_workContext);
+            var serviceProvider = MockRepository.GenerateMock<IServiceProvider>();
+            var httpContextAccessor = MockRepository.GenerateMock<IHttpContextAccessor>();
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IWorkContext))).Return(_workContext);
+
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(CurrencySettings))).Return(new CurrencySettings{PrimaryStoreCurrencyId = 1});
+            var currencyService = MockRepository.GenerateMock<ICurrencyService>();
+            currencyService.Expect(x => x.GetCurrencyById(1)).Return(new Currency {Id = 1, RoundingTypeId = 0});
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(ICurrencyService))).Return(currencyService);
+
+            nopEngine.Expect(x => x.ServiceProvider).Return(serviceProvider);
             EngineContext.Replace(nopEngine);
         }
 
@@ -348,11 +356,11 @@ namespace Nop.Services.Tests.Catalog
         public void Test_GetUnitPrice_WhenRoundPricesDuringCalculationIsTrue_PriceMustBeRounded(decimal inputPrice, decimal expectedPrice)
         {
             // arrange
-            ShoppingCartItem shoppingCartItem = CreateTestShopCartItem(inputPrice);
+            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
 
             // act
             _shoppingCartSettings.RoundPricesDuringCalculation = true;
-            decimal resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
+            var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
 
             // assert
             resultPrice.ShouldEqual(expectedPrice);
@@ -366,11 +374,11 @@ namespace Nop.Services.Tests.Catalog
         public void Test_GetUnitPrice_WhenNotRoundPricesDuringCalculationIsFalse_PriceMustNotBeRounded(decimal inputPrice, decimal expectedPrice)
         {
             // arrange            
-            ShoppingCartItem shoppingCartItem = CreateTestShopCartItem(inputPrice);
+            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
 
             // act
             _shoppingCartSettings.RoundPricesDuringCalculation = false;
-            decimal resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
+            var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
 
             // assert
             resultPrice.ShouldEqual(expectedPrice);
@@ -379,10 +387,10 @@ namespace Nop.Services.Tests.Catalog
         private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer();
 
             //shopping cart
-            Product product = new Product
+            var product = new Product
             {
                 Id = 1,
                 Name = "Product name 1",
@@ -391,7 +399,7 @@ namespace Nop.Services.Tests.Catalog
                 Published = true,
             };
 
-            ShoppingCartItem shoppingCartItem = new ShoppingCartItem
+            var shoppingCartItem = new ShoppingCartItem
             {
                 Customer = customer,
                 CustomerId = customer.Id,

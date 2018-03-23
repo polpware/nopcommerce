@@ -177,6 +177,7 @@ namespace Nop.Data.Tests
             {
                 Name = "Name 1",
                 PriceAdjustment = 1.1M,
+                PriceAdjustmentUsePercentage = true,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
                 IsPreSelected = true,
@@ -209,9 +210,9 @@ namespace Nop.Data.Tests
                 NotApprovedTotalReviews = 5,
                 SubjectToAcl = true,
                 LimitedToStores = true,
-                Sku = "sku 1",
+                Sku = "SKU 1",
                 ManufacturerPartNumber = "manufacturerPartNumber",
-                Gtin = "gtin 1",
+                Gtin = "GTIN 1",
                 IsGiftCard = true,
                 GiftCardTypeId = 1,
                 OverriddenGiftCardAmount = 1,
@@ -316,6 +317,7 @@ namespace Nop.Data.Tests
                 Gtin = "Gtin1",
                 OverriddenPrice = 0.01M,
                 NotifyAdminForQuantityBelow = 3,
+                PictureId = 1,
                 Product = test.GetTestProduct()
             };
         }
@@ -349,6 +351,7 @@ namespace Nop.Data.Tests
                 ColorSquaresRgb = "12FF33",
                 ImageSquaresPictureId = 1,
                 PriceAdjustment = 1.1M,
+                PriceAdjustmentUsePercentage = true,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
                 Quantity = 2,
@@ -470,6 +473,7 @@ namespace Nop.Data.Tests
                 Email = "Email 1",
                 Company = "Company 1",
                 City = "City 1",
+                County = "County 1",
                 Address1 = "Address1a",
                 Address2 = "Address1a",
                 ZipPostalCode = "ZipPostalCode 1",
@@ -605,7 +609,10 @@ namespace Nop.Data.Tests
                 TaxExempt = true,
                 Active = true,
                 IsSystemRole = true,
-                SystemName = "Administrators"
+                SystemName = "Administrators",
+                OverrideTaxDisplayType = true,
+                DefaultTaxDisplayTypeId = 2,
+                EnablePasswordLifetime = true
             };
         }
 
@@ -966,7 +973,7 @@ namespace Nop.Data.Tests
             return new MessageTemplate
             {
                 Name = "Template1",
-                BccEmailAddresses = "Bcc",
+                BccEmailAddresses = "BCC",
                 Subject = "Subj",
                 Body = "Some text",
                 IsActive = true,
@@ -990,7 +997,7 @@ namespace Nop.Data.Tests
             };
         }
 
-        public static QueuedEmail GettestQueuedEmail(this PersistenceTest test)
+        public static QueuedEmail GetTestQueuedEmail(this PersistenceTest test)
         {
             return new QueuedEmail
             {
@@ -1002,7 +1009,7 @@ namespace Nop.Data.Tests
                 ReplyTo = "ReplyTo",
                 ReplyToName = "ReplyToName",
                 CC = "CC",
-                Bcc = "Bcc",
+                Bcc = "BCC",
                 Subject = "Subject",
                 Body = "Body",
                 AttachmentFilePath = "some file path",
@@ -1463,8 +1470,6 @@ namespace Nop.Data.Tests
                 Type = "some type 1",
                 Enabled = true,
                 StopOnError = true,
-                LeasedByMachineName = "LeasedByMachineName 1",
-                LeasedUntilUtc = new DateTime(2009, 01, 01),
                 LastStartUtc = new DateTime(2010, 01, 01),
                 LastEndUtc = new DateTime(2010, 01, 02),
                 LastSuccessUtc = new DateTime(2010, 01, 03)
