@@ -7,11 +7,13 @@ WEB_EXTENSIONS := $(WEBDIR)/Extensions
 WEB_MODELS := $(WEBDIR)/Models
 WEB_VALIDATORS := $(WEBDIR)/Validators
 WEB_INFRASTRUCTURE := $(WEBDIR)/Infrastructure
+WEB_FACTORIES := $(WEBDIR)/Factories
 
 # Target MVC
 WEB_MVC_LIB_DIR := Presentation/Nop.WebLib.MVC
 WEB_MVC_LIB_CONTROLLER := $(WEB_MVC_LIB_DIR)/Controllers
 WEB_MVC_LIB_EXTENSIONS := $(WEB_MVC_LIB_DIR)/Extensions
+WEB_MVC_LIB_FACTORIES := $(WEB_MVC_LIB_DIR)/Factories
 
 # Target Data
 WEB_DATA_LIB_DIR := Presentation/Nop.WebLib.Data
@@ -26,6 +28,10 @@ $(WEB_MVC_LIB_CONTROLLER)/%.cs: $(WEB_CONTROLLER)/%.cs
 	$(SED) -f web-lib-subst.sed $< > $@
 
 $(WEB_MVC_LIB_EXTENSIONS)/%.cs: $(WEB_EXTENSIONS)/%.cs
+	$(ECHO) Making a file $@ from $<
+	$(SED) -f web-lib-subst.sed $< > $@
+
+$(WEB_MVC_LIB_FACTORIES)/%.cs: $(WEB_FACTORIES)/%.cs
 	$(ECHO) Making a file $@ from $<
 	$(SED) -f web-lib-subst.sed $< > $@
 
@@ -184,6 +190,7 @@ WEB_CONTROLLER_SOURCES := $(wildcard $(WEB_CONTROLLER)/*.cs)
 WEB_MODELS_SOURCES := $(shell find $(WEB_MODELS) -type f -name '*.cs')
 WEB_VALIDATORS_SOURCES := $(shell find $(WEB_VALIDATORS) -type f -name '*.cs')
 # Extensions are split into two parts
+WEB_FACTORIES_SOURCES_FOR_MVC := $(shell find $(WEB_FACTORIES) -type f -name '*.cs')
 WEB_EXTENSIONS_SOURCES_FOR_MVC := AttributeParserHelper.cs HtmlExtensions.cs
 WEB_EXTENSIONS_SOURCES_FOR_DATA := MappingExtensions.cs
 # Infrastructure is special, we are only interested in one file
@@ -191,6 +198,7 @@ WEB_INFRASTRUCTURE_SOURCES_FOR_DATA := ModelCacheEventConsumer.cs
 # Target MVC FILES
 WEB_MVC_LIB_CONTROLLER_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.MVC,$(WEB_CONTROLLER_SOURCES))
 WEB_MVC_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Nop.WebLib.MVC/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_MVC))
+WEB_MVC_LIB_FACTORIES_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.MVC,$(WEB_FACTORIES_SOURCES_FOR_MVC))
 
 # Target Data Files
 WEB_DATA_LIB_MODELS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.Data,$(WEB_MODELS_SOURCES))
@@ -206,6 +214,10 @@ WEB_MVC_LIB_CONTROLLER_DIR:
 $(WEB_MVC_LIB_EXTENSIONS_SOURCES): | WEB_MVC_LIB_EXTENSIONS_DIR
 WEB_MVC_LIB_EXTENSIONS_DIR:
 	$(MKDIR) -p $(WEB_MVC_LIB_EXTENSIONS)
+
+$(WEB_MVC_LIB_FACTORIES_SOURCES): | WEB_MVC_LIB_FACTORIES_DIR
+WEB_MVC_LIB_FACTORIES_DIR:
+	$(MKDIR) -p $(WEB_MVC_LIB_FACTORIES)
 
 $(WEB_DATA_LIB_INFRASTRUCTURE_SOURCES): | WEB_DATA_LIB_INFRASTRUCTURE_DIR
 WEB_DATA_LIB_INFRASTRUCTURE_DIR:
@@ -223,10 +235,15 @@ $(WEB_DATA_LIB_EXTENSIONS_SOURCES): | WEB_DATA_LIB_EXTENSIONS_DIR
 WEB_DATA_LIB_EXTENSIONS_DIR:
 	$(MKDIR) -p $(WEB_DATA_LIB_EXTENSIONS)
 
-mvc: $(WEB_MVC_LIB_CONTROLLER_SOURCES) $(WEB_MVC_LIB_EXTENSIONS_SOURCES) 
+mvc: $(WEB_MVC_LIB_CONTROLLER_SOURCES) $(WEB_MVC_LIB_EXTENSIONS_SOURCES) $(WEB_MVC_LIB_FACTORIES_SOURCES)
 	$(ECHO) Making web mvc lib from nop web
 
 data: $(WEB_DATA_LIB_MODELS_SOURCES) $(WEB_DATA_LIB_VALIDATORS_SOURCES) $(WEB_DATA_LIB_EXTENSIONS_SOURCES) $(WEB_DATA_LIB_INFRASTRUCTURE_SOURCES)
 	$(ECHO) Making web dat lib from nop web
 
+test:
+	echo $(WEB_FACTORIES_SOURCES_FOR_MVC)
+	echo $(WEB_MVC_LIB_FACTORIES_SOURCES)
+
 .PHONY: mvc data
+
