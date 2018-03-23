@@ -10,13 +10,13 @@ WEB_INFRASTRUCTURE := $(WEBDIR)/Infrastructure
 WEB_FACTORIES := $(WEBDIR)/Factories
 
 # Target MVC
-WEB_MVC_LIB_DIR := Presentation/Nop.WebLib.MVC
+WEB_MVC_LIB_DIR := Presentation/Polpware.NopWeb.MVC
 WEB_MVC_LIB_CONTROLLER := $(WEB_MVC_LIB_DIR)/Controllers
 WEB_MVC_LIB_EXTENSIONS := $(WEB_MVC_LIB_DIR)/Extensions
 WEB_MVC_LIB_FACTORIES := $(WEB_MVC_LIB_DIR)/Factories
 
 # Target Data
-WEB_DATA_LIB_DIR := Presentation/Nop.WebLib.Data
+WEB_DATA_LIB_DIR := Presentation/Polpware.NopWeb.Data
 WEB_DATA_LIB_MODELS := $(WEB_DATA_LIB_DIR)/Models
 WEB_DATA_LIB_VALIDATORS := $(WEB_DATA_LIB_DIR)/Validators
 WEB_DATA_LIB_EXTENSIONS := $(WEB_DATA_LIB_DIR)/Extensions
@@ -43,11 +43,6 @@ $(WEB_DATA_LIB_INFRASTRUCTURE)/Cache/%.cs: $(WEB_INFRASTRUCTURE)/Cache/%.cs
 # Rules for building Target Data
 $(WEB_DATA_LIB_EXTENSIONS)/%.cs: $(WEB_EXTENSIONS)/%.cs
 	$(ECHO) Making a file $@ from $<
-	$(SED) -f web-lib-subst.sed $< > $@
-
-$(WEB_DATA_LIB_MODELS)/Vendors/%.cs: $(WEB_MODELS)/Vendors/%.cs
-	$(ECHO) Making a file $@ from $<
-	$(MKDIR) -p $(dir $@)
 	$(SED) -f web-lib-subst.sed $< > $@
 
 $(WEB_DATA_LIB_MODELS)/Blogs/%.cs: $(WEB_MODELS)/Blogs/%.cs
@@ -135,7 +130,7 @@ $(WEB_DATA_LIB_MODELS)/Topics/%.cs: $(WEB_MODELS)/Topics/%.cs
 	$(MKDIR) -p $(dir $@)
 	$(SED) -f web-lib-subst.sed $< > $@
 
-$(WEB_DATA_LIB_VALIDATORS)/Vendors/%.cs: $(WEB_VALIDATORS)/Vendors/%.cs
+$(WEB_DATA_LIB_MODELS)/Vendors/%.cs: $(WEB_MODELS)/Vendors/%.cs
 	$(ECHO) Making a file $@ from $<
 	$(MKDIR) -p $(dir $@)
 	$(SED) -f web-lib-subst.sed $< > $@
@@ -185,6 +180,11 @@ $(WEB_DATA_LIB_VALIDATORS)/ShoppingCart/%.cs: $(WEB_VALIDATORS)/ShoppingCart/%.c
 	$(MKDIR) -p $(dir $@)
 	$(SED) -f web-lib-subst.sed $< > $@
 
+$(WEB_DATA_LIB_VALIDATORS)/Vendors/%.cs: $(WEB_VALIDATORS)/Vendors/%.cs
+	$(ECHO) Making a file $@ from $<
+	$(MKDIR) -p $(dir $@)
+	$(SED) -f web-lib-subst.sed $< > $@
+
 # SOURCE FILES
 WEB_CONTROLLER_SOURCES := $(wildcard $(WEB_CONTROLLER)/*.cs)
 WEB_MODELS_SOURCES := $(shell find $(WEB_MODELS) -type f -name '*.cs')
@@ -196,15 +196,15 @@ WEB_EXTENSIONS_SOURCES_FOR_DATA := MappingExtensions.cs
 # Infrastructure is special, we are only interested in one file
 WEB_INFRASTRUCTURE_SOURCES_FOR_DATA := ModelCacheEventConsumer.cs
 # Target MVC FILES
-WEB_MVC_LIB_CONTROLLER_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.MVC,$(WEB_CONTROLLER_SOURCES))
-WEB_MVC_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Nop.WebLib.MVC/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_MVC))
-WEB_MVC_LIB_FACTORIES_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.MVC,$(WEB_FACTORIES_SOURCES_FOR_MVC))
+WEB_MVC_LIB_CONTROLLER_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.MVC,$(WEB_CONTROLLER_SOURCES))
+WEB_MVC_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Polpware.NopWeb.MVC/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_MVC))
+WEB_MVC_LIB_FACTORIES_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.MVC,$(WEB_FACTORIES_SOURCES_FOR_MVC))
 
 # Target Data Files
-WEB_DATA_LIB_MODELS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.Data,$(WEB_MODELS_SOURCES))
-WEB_DATA_LIB_VALIDATORS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Nop.WebLib.Data,$(WEB_VALIDATORS_SOURCES))
-WEB_DATA_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Nop.WebLib.Data/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_DATA))
-WEB_DATA_LIB_INFRASTRUCTURE_SOURCES := $(addprefix Presentation/Nop.WebLib.Data/Infrastructure/Cache/,$(WEB_INFRASTRUCTURE_SOURCES_FOR_DATA))
+WEB_DATA_LIB_MODELS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.Data,$(WEB_MODELS_SOURCES))
+WEB_DATA_LIB_VALIDATORS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.Data,$(WEB_VALIDATORS_SOURCES))
+WEB_DATA_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Polpware.NopWeb.Data/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_DATA))
+WEB_DATA_LIB_INFRASTRUCTURE_SOURCES := $(addprefix Presentation/Polpware.NopWeb.Data/Infrastructure/Cache/,$(WEB_INFRASTRUCTURE_SOURCES_FOR_DATA))
 
 # Prerequisite for targets (directories)
 $(WEB_MVC_LIB_CONTROLLER_SOURCES): | WEB_MVC_LIB_CONTROLLER_DIR

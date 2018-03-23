@@ -1,7 +1,7 @@
 #!/bin/sed -f
-s/Nop.Web.Controllers/Nop.WebLib.Controllers/g
-s/Nop.Web.Models/Nop.WebLib.Models/g
-s/Nop.Web.Extensions/Nop.WebLib.Extensions/g
-s/Nop.Web.Validators/Nop.WebLib.Validators/g
-s/Nop.Web.Infrastructure/Nop.WebLib.Infrastructure/g
-s/Nop.Web.Factories/Nop.WebLib.Factories/g
+s/Nop.Web.Controllers/Polpware.NopWeb.Controllers/g
+s/Nop.Web.Models/Polpware.NopWeb.Models/g
+s/Nop.Web.Extensions/Polpware.NopWeb.Extensions/g
+s/Nop.Web.Validators/Polpware.NopWeb.Validators/g
+s/Nop.Web.Infrastructure/Polpware.NopWeb.Infrastructure/g
+s/Nop.Web.Factories/Polpware.NopWeb.Factories/g
