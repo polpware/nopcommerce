@@ -4,10 +4,10 @@
 declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
-<Language>
+<Language>  
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyCode.Hint">
     <Value>The currency code. For a list of currency codes, go to: https://en.wikipedia.org/wiki/ISO_4217</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.Fields.Avatar">
     <Value>Avatar</Value>
   </LocaleResource>
@@ -644,6 +644,333 @@ set @resources='
   <LocaleResource Name="ShoppingCart.RequiredProductUpdateWarning">
     <Value>This product is required in the quantity of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From.Hint">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To.Hint">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightFrom">
+    <Value>Order weight from</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightFrom.Hint">
+    <Value>Order weight from.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo">
+    <Value>Order weight to</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo.Hint">
+    <Value>Order weight to.</Value>
+  </LocaleResource>     
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalFrom">
+    <Value>Order subtotal from</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalFrom.Hint">
+    <Value>Order subtotal from.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalTo">
+    <Value>Order subtotal to</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalTo.Hint">
+    <Value>Order subtotal to.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.ShippingByWeight">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fixed">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Rate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Store">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Store.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Warehouse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Warehouse.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Country">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Country.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.StateProvince">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.StateProvince.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Zip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Zip.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod.Hint">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.AdditionalFixedCost">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.AdditionalFixedCost.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LowerWeightLimit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LowerWeightLimit.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.PercentageRateOfSubtotal">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.PercentageRateOfSubtotal.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.RatePerWeightUnit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.RatePerWeightUnit.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LimitMethodsToCreated">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LimitMethodsToCreated.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.DataHtml">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.AddRecord">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Formula">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Formula.Value">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.ShippingByWeight">
+    <Value>By Weight/Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fixed">
+    <Value>Fixed Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Rate">
+    <Value>Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Store.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all warehouses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Country.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all customers, regardless of the country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.StateProvince.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all customers from the given country, regardless of the state.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Zip">
+    <Value>Zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Zip.Hint">
+    <Value>Zip / postal code. If zip is empty, then this shipping rate will apply to all customers from the given country or state, regardless of the zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod">
+    <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod.Hint">
+    <Value>Choose shipping method.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.From">
+    <Value>Order weight from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.From.Hint">
+    <Value>Order weight from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.To">
+    <Value>Order weight to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.To.Hint">
+    <Value>Order weight to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost">
+    <Value>Additional fixed cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost.Hint">
+    <Value>Specify an additional fixed cost per shopping cart for this option. Set to 0 if you don''t want an additional fixed cost to be applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LowerWeightLimit">
+    <Value>Lower weight limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LowerWeightLimit.Hint">
+    <Value>Lower weight limit. This field can be used for \"per extra weight unit\" scenarios.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.PercentageRateOfSubtotal">
+    <Value>Charge percentage (of subtotal)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.PercentageRateOfSubtotal.Hint">
+    <Value>Charge percentage (of subtotal).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.RatePerWeightUnit">
+    <Value>Rate per weight unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.RatePerWeightUnit.Hint">
+    <Value>Rate per weight unit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated">
+    <Value>Limit shipping methods to configured ones</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated.Hint">
+    <Value>If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they''ll be able to choose any existing shipping options even they are not configured here (zero shipping fee in this case).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.DataHtml">
+    <Value>Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.AddRecord">
+    <Value>Add record</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Formula">
+    <Value>Formula to calculate rates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Formula.Value">
+    <Value>[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed">
+    <Value>Adding a new row with zero value isn''t allowed</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Account.Fields.Username.NotValid">
+    <Value>Username is not valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled">
+    <Value>Username validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled.Hint">
+    <Value>Check to enable username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex">
+    <Value>Use regex for username validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule">
+    <Value>Username validation rule</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule.Hint">
+    <Value>Set the validation rule for username. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for username validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
+    <Value>The regular expression for username validation is incorrect</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory">
+    <Value>Delete gift card usage history after order cancellation</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory.Hint">
+    <Value>Check to delete gift card usage history after order cancellation</Value>
+  </LocaleResource>   
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value>(multi-warehouse)</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value>---</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountLimitation.Hint">
+    <Value>Choose the limitation of discount. This parameter will not be taken into account for recurring products/orders.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaV2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptcha">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaMessage">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.PaymentMethods">
+    <Value>Payment methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.PaymentMethodsAndRestrictions">
+    <Value>Payment methods and restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
+    <Value>Maximum reward points to use per order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder.Hint">
+    <Value>Customers won''t be able to use more than X reward points per one order. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Checkout.UseRewardPoints">
+    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
+    <Value>Export/Import related entities using name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName.Hint">
+    <Value>Check if related entities should be exported/imported using name.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
+    <Value>Manufacturers with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
+    <Value>Categories with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -1213,10 +1540,26 @@ END
 GO
 
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernamevalidationenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.usernamevalidationenabled', N'false', 0)
+END
+GO
+
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.purchasespointsvalidity')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'rewardpointssettings.purchasespointsvalidity', N'45', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernamevalidationuseregex')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.usernamevalidationuseregex', N'false', 0)
 END
 GO
 
@@ -1233,6 +1576,80 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.checkoutdi
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'ordersettings.checkoutdisabled', N'false', 0)
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and NAME='From')
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeight].[From]', 'WeightFrom', 'COLUMN'
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and NAME='To')
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeight].[To]', 'WeightTo', 'COLUMN'
+END
+GO
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalFrom')
+BEGIN
+	ALTER TABLE [ShippingByWeight]
+	ADD [OrderSubtotalFrom] DECIMAL NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalFrom')
+BEGIN
+	UPDATE [ShippingByWeight]
+	SET [OrderSubtotalFrom] = 0
+	WHERE [OrderSubtotalFrom] IS NULL
+END
+GO
+
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalFrom')
+BEGIN
+	ALTER TABLE [ShippingByWeight] ALTER COLUMN [OrderSubtotalFrom] DECIMAL NOT NULL
+END
+GO
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalTo')
+BEGIN
+	ALTER TABLE [ShippingByWeight]
+	ADD [OrderSubtotalTo] DECIMAL NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalTo')
+BEGIN
+	UPDATE [ShippingByWeight]
+	SET [OrderSubtotalTo] = 1000000
+	WHERE [OrderSubtotalTo] IS NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalTo')
+BEGIN
+	ALTER TABLE [ShippingByWeight] ALTER COLUMN [OrderSubtotalTo] DECIMAL NOT NULL
+END
+GO
+
+--rename table
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeight]', 'ShippingByWeightByTotal'
 END
 GO
 
@@ -1909,5 +2326,267 @@ GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Category_Deleted_Extended' and object_id=object_id(N'[dbo].[Category]'))
 BEGIN
     CREATE NONCLUSTERED INDEX [IX_Category_Deleted_Extended] ON Category ([Deleted]) INCLUDE ([Id],[Name],[SubjectToAcl],[LimitedToStores],[Published])
+END
+GO
+
+--new setting   
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernamevalidationrule')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.usernamevalidationrule', N'', 0)
+END
+GO
+
+--new setting   
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.deletegiftcardusagehistory')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.deletegiftcardusagehistory', N'False', 0)
+END
+GO
+
+--update [sename] column for product tags
+IF EXISTS (
+        SELECT *
+        FROM sysobjects
+        WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [temp_generate_sename]
+GO
+CREATE PROCEDURE [temp_generate_sename]
+(
+    @table_name nvarchar(1000),
+    @entity_id int,
+    @language_id int = 0, --0 to process main sename column, --language id to process a localized value
+    @result nvarchar(1000) OUTPUT
+)
+AS
+BEGIN
+    --get current name
+    DECLARE @current_sename nvarchar(1000)
+    DECLARE @sql nvarchar(4000)
+    
+    IF (@language_id = 0)
+    BEGIN
+        SET @sql = 'SELECT @current_sename = [Name] FROM [' + @table_name + '] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+        EXEC sp_executesql @sql,N'@current_sename nvarchar(1000) OUTPUT',@current_sename OUTPUT        
+    END
+    ELSE
+    BEGIN
+        SET @sql = 'SELECT @current_sename = [LocaleValue] FROM [LocalizedProperty] WHERE [LocaleKeyGroup]=''' + @table_name + ''' AND [LocaleKey] = ''Name'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+        EXEC sp_executesql @sql,N'@current_sename nvarchar(1000) OUTPUT',@current_sename OUTPUT		
+        
+        --if not empty, se name is already specified by a store owner. if empty, we should use poduct name
+        IF (@current_sename is null or @current_sename = N'')
+        BEGIN
+            SET @sql = 'SELECT @current_sename = [LocaleValue] FROM [LocalizedProperty] WHERE [LocaleKeyGroup]=''' + @table_name + ''' AND [LocaleKey] = ''Name'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+            EXEC sp_executesql @sql,N'@current_sename nvarchar(1000) OUTPUT',@current_sename OUTPUT        
+        END
+        
+        --if localized product name is also empty, we exit
+        IF (@current_sename is null or @current_sename = N'')
+            RETURN
+    END
+    
+    --generate se name    
+    DECLARE @new_sename nvarchar(1000)
+    SET @new_sename = ''
+    --ensure only allowed chars
+    DECLARE @allowed_se_chars nvarchar(4000)
+    --Note for store owners: add more chars below if want them to be supported when migrating your data
+    SET @allowed_se_chars = N'abcdefghijklmnopqrstuvwxyz1234567890 _-'
+    DECLARE @l int
+    SET @l = len(@current_sename)
+    DECLARE @p int
+    SET @p = 1
+    WHILE @p <= @l
+    BEGIN
+        DECLARE @c nvarchar(1)
+        SET @c = substring(@current_sename, @p, 1)
+        IF CHARINDEX(@c,@allowed_se_chars) > 0
+        BEGIN
+            SET @new_sename = @new_sename + @c
+        END		
+        SET @p = @p + 1
+    END	
+    --replace spaces with '-'
+    SELECT @new_sename = REPLACE(@new_sename,' ','-');
+    WHILE CHARINDEX('--',@new_sename) > 0
+        SELECT @new_sename = REPLACE(@new_sename,'--','-');
+    WHILE CHARINDEX('__',@new_sename) > 0
+        SELECT @new_sename = REPLACE(@new_sename,'__','_');
+    --ensure not empty
+    IF (@new_sename is null or @new_sename = '')
+        SELECT @new_sename = ISNULL(CAST(@entity_id AS nvarchar(max)), '0');
+    --lowercase
+    SELECT @new_sename = LOWER(@new_sename)
+    --ensure this sename is not reserved
+    WHILE (1=1)
+    BEGIN
+        DECLARE @sename_is_already_reserved bit
+        SET @sename_is_already_reserved = 0
+        SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [Slug] = @sename AND NOT ([EntityId] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0') + ' AND [EntityName] = ''' + @table_name + '''))
+                    BEGIN
+                        SELECT @sename_is_already_reserved = 1
+                    END'
+        EXEC sp_executesql @sql,N'@sename nvarchar(1000), @sename_is_already_reserved nvarchar(4000) OUTPUT',@new_sename,@sename_is_already_reserved OUTPUT
+        
+        IF (@sename_is_already_reserved > 0)
+        BEGIN
+            --add some digit to the end in this case
+            SET @new_sename = @new_sename + '-2'
+        END
+        ELSE
+        BEGIN
+            BREAK
+        END
+    END
+    
+    --return
+    SET @result = @new_sename
+END
+GO
+
+BEGIN
+    DECLARE @sename_existing_entity_id int
+    DECLARE cur_sename_existing_entity CURSOR FOR
+    SELECT [Id]
+    FROM [ProductTag]
+    OPEN cur_sename_existing_entity
+    FETCH NEXT FROM cur_sename_existing_entity INTO @sename_existing_entity_id
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        DECLARE @sename nvarchar(1000)    
+        SET @sename = null -- clear cache (variable scope)
+        
+        DECLARE @table_name nvarchar(1000)    
+        SET @table_name = N'ProductTag'
+        
+        DECLARE @product_tag_system_name nvarchar(1000)
+        SET @product_tag_system_name = null -- clear cache (variable scope)
+        SELECT @product_tag_system_name = [Name] FROM [ProductTag] WHERE [Id] = @sename_existing_entity_id
+        
+        --main sename
+        EXEC    [dbo].[temp_generate_sename]
+				@table_name = @table_name,
+                @entity_id = @sename_existing_entity_id,                
+                @result = @sename OUTPUT
+                
+        IF EXISTS(SELECT 1 FROM [UrlRecord] WHERE [LanguageId]=0 AND [EntityId]=@sename_existing_entity_id AND [EntityName]=@table_name)
+        BEGIN
+            UPDATE [UrlRecord]
+            SET [Slug] = @sename
+            WHERE [LanguageId]=0 AND [EntityId]=@sename_existing_entity_id AND [EntityName]=@table_name
+        END
+        ELSE
+        BEGIN
+            INSERT INTO [UrlRecord] ([EntityId], [EntityName], [Slug], [IsActive], [LanguageId])
+            VALUES (@sename_existing_entity_id, @table_name, @sename, 1, 0)
+        END        
+		
+		
+		--localized values
+        DECLARE @ExistingLanguageID int
+        DECLARE cur_existinglanguage CURSOR FOR
+        SELECT [ID]
+        FROM [Language]
+        OPEN cur_existinglanguage
+        FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+        WHILE @@FETCH_STATUS = 0
+        BEGIN    
+            SET @sename = null -- clear cache (variable scope)
+            
+            EXEC    [dbo].[temp_generate_sename]
+                    @table_name = @table_name,
+                    @entity_id = @sename_existing_entity_id,
+                    @language_id = @ExistingLanguageID,
+                    @result = @sename OUTPUT
+            IF (len(@sename) > 0)
+            BEGIN
+                
+                DECLARE @sql nvarchar(4000)
+                SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [EntityName]=''' + @table_name + ''' AND [LanguageId] = ' + ISNULL(CAST(@ExistingLanguageID AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_entity_id AS nvarchar(max)), '0') + ')
+                BEGIN
+                    --update
+                    UPDATE [UrlRecord]
+                    SET [Slug] = @sename
+                    WHERE [EntityName]=''' + @table_name + ''' AND [LanguageId] = ' + ISNULL(CAST(@ExistingLanguageID AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_entity_id AS nvarchar(max)), '0') + '
+                END
+                ELSE
+                BEGIN
+                    --insert
+                    INSERT INTO [UrlRecord] ([EntityId], [EntityName], [Slug], [IsActive], [LanguageId])
+                    VALUES (' + ISNULL(CAST(@sename_existing_entity_id AS nvarchar(max)), '0') +','''+ @table_name + ''',@sename, 1, ' + ISNULL(CAST(@ExistingLanguageID AS nvarchar(max)), '0')+ ')
+                END
+                '
+                EXEC sp_executesql @sql,N'@sename nvarchar(1000) OUTPUT',@sename OUTPUT
+                
+            END
+                    
+
+            --fetch next language identifier
+            FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+        END
+        CLOSE cur_existinglanguage
+        DEALLOCATE cur_existinglanguage
+
+
+        --fetch next identifier
+        FETCH NEXT FROM cur_sename_existing_entity INTO @sename_existing_entity_id
+    END
+    CLOSE cur_sename_existing_entity
+    DEALLOCATE cur_sename_existing_entity
+END
+GO
+
+--drop temporary procedures & functions
+IF EXISTS (
+        SELECT *
+        FROM sys.objects
+        WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [temp_generate_sename]
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'captchasettings.recaptchaversion'
+GO
+
+--new setting 
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.maximumrewardpointstouseperorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'rewardpointssettings.maximumrewardpointstouseperorder', N'0', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportrelatedentitiesbyname')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportrelatedentitiesbyname', N'true', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'commonsettings.usestoredproceduresifsupported'
+GO
+
+--drop some indexes
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PMM_ProductId' and object_id=object_id(N'[Product_Manufacturer_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PMM_ProductId] ON [Product_Manufacturer_Mapping]
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PCM_ProductId' and object_id=object_id(N'[Product_Category_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PCM_ProductId] ON [Product_Category_Mapping]
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_ProductId' and object_id=object_id(N'[Product_SpecificationAttribute_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PSAM_ProductId] ON [Product_SpecificationAttribute_Mapping]
 END
 GO

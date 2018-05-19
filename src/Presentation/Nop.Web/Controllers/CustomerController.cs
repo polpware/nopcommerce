@@ -34,6 +34,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
@@ -716,7 +717,8 @@ namespace Nop.Web.Controllers
                         if (defaultAddress.StateProvinceId == 0)
                             defaultAddress.StateProvinceId = null;
                         //set default address
-                        customer.Addresses.Add(defaultAddress);
+                        //customer.Addresses.Add(defaultAddress);
+                        customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultAddress });
                         customer.BillingAddress = defaultAddress;
                         customer.ShippingAddress = defaultAddress;
                         _customerService.UpdateCustomer(customer);
@@ -802,7 +804,11 @@ namespace Nop.Web.Controllers
             var usernameAvailable = false;
             var statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.NotAvailable");
 
-            if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
+            if (!UsernamePropertyValidator.IsValid(username, _customerSettings))
+            {
+                statusText = _localizationService.GetResource("Account.Fields.Username.NotValid");
+            }
+            else if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
             {
                 if (_workContext.CurrentCustomer != null &&
                     _workContext.CurrentCustomer.Username != null &&
@@ -1197,7 +1203,8 @@ namespace Nop.Web.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                customer.Addresses.Add(address);
+                //customer.Addresses.Add(address);
+                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                 _customerService.UpdateCustomer(customer);
 
                 return RedirectToRoute("CustomerAddresses");
