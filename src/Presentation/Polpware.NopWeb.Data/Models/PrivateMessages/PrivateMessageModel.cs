@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentValidation.Attributes;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Polpware.NopWeb.Validators.PrivateMessages;
 
 namespace Polpware.NopWeb.Models.PrivateMessages

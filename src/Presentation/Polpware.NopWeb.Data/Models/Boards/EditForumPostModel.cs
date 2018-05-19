@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Attributes;
 using Nop.Core.Domain.Forums;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Polpware.NopWeb.Validators.Boards;
 
 namespace Polpware.NopWeb.Models.Boards

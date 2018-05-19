@@ -2,8 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Data;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 using Polpware.NopWeb.Validators.Install;
 
 namespace Polpware.NopWeb.Models.Install
@@ -25,8 +26,7 @@ namespace Polpware.NopWeb.Models.Install
         public string ConfirmPassword { get; set; }
 
         public string DatabaseConnectionString { get; set; }
-        public string DataProvider { get; set; }
-        public bool DisableSqlCompact { get; set; }
+        public DataProviderType DataProvider { get; set; }
         //SQL Server properties
         public string SqlConnectionInfo { get; set; }
 

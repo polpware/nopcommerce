@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Polpware.NopWeb.Models.Media;
 
 namespace Polpware.NopWeb.Models.Catalog
