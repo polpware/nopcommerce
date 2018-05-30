@@ -5,3 +5,4 @@ s/Nop.Web.Extensions/Polpware.NopWeb.Extensions/g
 s/Nop.Web.Validators/Polpware.NopWeb.Validators/g
 s/Nop.Web.Infrastructure/Polpware.NopWeb.Infrastructure/g
 s/Nop.Web.Factories/Polpware.NopWeb.Factories/g
+s/Nop.Web.Components/Polpware.NopWeb.Components/g

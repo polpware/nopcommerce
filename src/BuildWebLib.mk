@@ -8,11 +8,13 @@ WEB_MODELS := $(WEBDIR)/Models
 WEB_VALIDATORS := $(WEBDIR)/Validators
 WEB_INFRASTRUCTURE := $(WEBDIR)/Infrastructure
 WEB_FACTORIES := $(WEBDIR)/Factories
+WEB_COMPONENTS := $(WEBDIR)/Components
 
 # Target MVC
 WEB_MVC_LIB_DIR := Presentation/Polpware.NopWeb.MVC
 WEB_MVC_LIB_CONTROLLER := $(WEB_MVC_LIB_DIR)/Controllers
 WEB_MVC_LIB_EXTENSIONS := $(WEB_MVC_LIB_DIR)/Extensions
+WEB_MVC_LIB_COMPONENTS := $(WEB_MVC_LIB_DIR)/Components
 
 # Target Data
 WEB_DATA_LIB_DIR := Presentation/Polpware.NopWeb.Data
@@ -28,6 +30,10 @@ $(WEB_MVC_LIB_CONTROLLER)/%.cs: $(WEB_CONTROLLER)/%.cs
 	$(SED) -f web-lib-subst.sed $< > $@
 
 $(WEB_MVC_LIB_EXTENSIONS)/%.cs: $(WEB_EXTENSIONS)/%.cs
+	$(ECHO) Making a file $@ from $<
+	$(SED) -f web-lib-subst.sed $< > $@
+
+$(WEB_MVC_LIB_COMPONENTS)/%.cs: $(WEB_COMPONENTS)/%.cs
 	$(ECHO) Making a file $@ from $<
 	$(SED) -f web-lib-subst.sed $< > $@
 
@@ -194,19 +200,25 @@ $(WEB_DATA_LIB_VALIDATORS)/Vendors/%.cs: $(WEB_VALIDATORS)/Vendors/%.cs
 # SOURCE FILES
 WEB_CONTROLLER_SOURCES := $(wildcard $(WEB_CONTROLLER)/*.cs)
 WEB_MODELS_SOURCES := $(shell find $(WEB_MODELS) -type f -name '*.cs')
+WEB_COMPONENTS_SOURCES := $(wildcard $(WEB_COMPONENTS)/*.cs)
+
 WEB_VALIDATORS_SOURCES := $(shell find $(WEB_VALIDATORS) -type f -name '*.cs')
+
 # Extensions are split into two parts
 WEB_FACTORIES_SOURCES_FOR_DATA := $(shell find $(WEB_FACTORIES) -type f -name '*.cs')
 WEB_EXTENSIONS_SOURCES_FOR_MVC := AttributeParserHelper.cs HtmlExtensions.cs
 WEB_EXTENSIONS_SOURCES_FOR_DATA := MappingExtensions.cs
+
 # Infrastructure is special, we are only interested in one file
 WEB_INFRASTRUCTURE_SOURCES_FOR_DATA := ModelCacheEventConsumer.cs
+
 # Target MVC FILES
 WEB_MVC_LIB_CONTROLLER_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.MVC,$(WEB_CONTROLLER_SOURCES))
 WEB_MVC_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Polpware.NopWeb.MVC/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_MVC))
-WEB_DATA_LIB_FACTORIES_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.Data,$(WEB_FACTORIES_SOURCES_FOR_DATA))
+WEB_MVC_LIB_COMPONENTS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.MVC,$(WEB_COMPONENTS_SOURCES))
 
 # Target Data Files
+WEB_DATA_LIB_FACTORIES_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.Data,$(WEB_FACTORIES_SOURCES_FOR_DATA))
 WEB_DATA_LIB_MODELS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.Data,$(WEB_MODELS_SOURCES))
 WEB_DATA_LIB_VALIDATORS_SOURCES := $(subst Presentation/Nop.Web,Presentation/Polpware.NopWeb.Data,$(WEB_VALIDATORS_SOURCES))
 WEB_DATA_LIB_EXTENSIONS_SOURCES := $(addprefix Presentation/Polpware.NopWeb.Data/Extensions/,$(WEB_EXTENSIONS_SOURCES_FOR_DATA))
@@ -215,7 +227,11 @@ WEB_DATA_LIB_INFRASTRUCTURE_SOURCES := $(addprefix Presentation/Polpware.NopWeb.
 # Prerequisite for targets (directories)
 $(WEB_MVC_LIB_CONTROLLER_SOURCES): | WEB_MVC_LIB_CONTROLLER_DIR
 WEB_MVC_LIB_CONTROLLER_DIR:
-	$(MKDIR) -p $(WEB_MVC_LIB_CONTROLLER) 
+	$(MKDIR) -p $(WEB_MVC_LIB_CONTROLLER)
+
+$(WEB_MVC_LIB_COMPONENTS_SOURCES): | WEB_MVC_LIB_COMPONENTS_DIR
+WEB_MVC_LIB_COMPONENTS_DIR:
+	$(MKDIR) -p $(WEB_MVC_LIB_COMPONENTS) 
 
 $(WEB_MVC_LIB_EXTENSIONS_SOURCES): | WEB_MVC_LIB_EXTENSIONS_DIR
 WEB_MVC_LIB_EXTENSIONS_DIR:
@@ -241,7 +257,7 @@ $(WEB_DATA_LIB_EXTENSIONS_SOURCES): | WEB_DATA_LIB_EXTENSIONS_DIR
 WEB_DATA_LIB_EXTENSIONS_DIR:
 	$(MKDIR) -p $(WEB_DATA_LIB_EXTENSIONS)
 
-mvc: $(WEB_MVC_LIB_CONTROLLER_SOURCES) $(WEB_MVC_LIB_EXTENSIONS_SOURCES) 
+mvc: $(WEB_MVC_LIB_CONTROLLER_SOURCES) $(WEB_MVC_LIB_EXTENSIONS_SOURCES) $(WEB_MVC_LIB_COMPONENTS_SOURCES)
 	$(ECHO) Making web mvc lib from nop web
 
 data: $(WEB_DATA_LIB_MODELS_SOURCES) $(WEB_DATA_LIB_VALIDATORS_SOURCES) $(WEB_DATA_LIB_EXTENSIONS_SOURCES) $(WEB_DATA_LIB_INFRASTRUCTURE_SOURCES) $(WEB_DATA_LIB_FACTORIES_SOURCES)
