@@ -15,6 +15,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -6034,6 +6035,13 @@ namespace Nop.Services.Installation
                 SpecificationAttributes =true
             });
 
+            settingService.SaveSetting(new GdprSettings
+            {
+                GdprEnabled = false,
+                LogPrivacyPolicyConsent = true,
+                LogNewsletterConsent = true
+            });
+
             settingService.SaveSetting(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
@@ -6069,6 +6077,7 @@ namespace Nop.Services.Installation
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
                 ProductSearchAutoCompleteNumberOfProducts = 10,
+                ShowLinkToAllResultInSearchAutoComplete = false,
                 ProductSearchTermMinimumLength = 3,
                 ShowProductImagesInSearchAutoComplete = false,
                 ShowBestsellersOnHomepage = false,
@@ -6113,7 +6122,8 @@ namespace Nop.Services.Installation
                 ExportImportUseDropdownlistsForAssociatedEntities = true,
                 ExportImportProductsCountInOneFile = 500,
                 ExportImportSplitProductsFile = false,
-                ExportImportRelatedEntitiesByName = true
+                ExportImportRelatedEntitiesByName = true,
+                CountDisplayedYearsDatePicker = 1
             });
 
             settingService.SaveSetting(new LocalizationSettings
