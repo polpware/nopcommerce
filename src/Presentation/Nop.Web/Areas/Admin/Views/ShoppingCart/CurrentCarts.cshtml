@@ -1,11 +1,9 @@
-﻿@using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
+﻿@model ShoppingCartSearchModel
+
+@using Nop.Services.Stores
 @inject IStoreService storeService
-@model ShoppingCartTypeModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
@@ -28,7 +26,8 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -42,8 +41,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-4">
+                            <button type="button" id="search-shopping-carts" class="btn btn-primary btn-search">
+                                <i class="fa fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="carts-grid"></div>
@@ -58,7 +66,13 @@
                                             url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -71,14 +85,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 //details grid
@@ -106,17 +120,28 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId=" +
-                                                e.data.CustomerId,
+                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CustomerId: e.data.CustomerId,
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         destroy: {
                                             url: "@Html.Raw(Url.Action("DeleteItem", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "destroy") {
+                                            this.read();
                                         }
                                     },
                                     schema: {
@@ -132,6 +157,7 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ShoppingCartItemSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
@@ -144,9 +170,7 @@
                                 sortable: true,
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ShoppingCartItemSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 columns: [
@@ -195,20 +219,14 @@
     </div>
 
     <script>
-        function additionalData() {
-            var data = {
-                ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
-            };
-            addAntiForgeryToken(data);
-            return data;
-        }
-
         $(document)
             .ready(function() {
-                $("#@Html.IdFor(model => model.ShoppingCartType)")
-                    .change(function() {
-                        $("#carts-grid").data('kendoGrid').dataSource.read();
-                    });
+                //search button
+                $('#search-shopping-carts').click(function() {
+                    //search
+                    $("#carts-grid").data('kendoGrid').dataSource.read();
+                    return false;
+                });
             });
     </script>
 </div>

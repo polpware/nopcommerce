@@ -17,6 +17,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -61,6 +62,7 @@ namespace Nop.Services.Common
         private readonly AddressSettings _addressSettings;
         private readonly IVendorService _vendorService;
         private readonly VendorSettings _vendorSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -93,6 +95,7 @@ namespace Nop.Services.Common
         /// <param name="addressSettings">Address settings</param>
         /// <param name="vendorService">Vendor service</param>
         /// <param name="vendorSettings">Vendor settings</param>
+        /// <param name="fileProvider">File provider</param>
         public PdfService(ILocalizationService localizationService, 
             ILanguageService languageService,
             IWorkContext workContext,
@@ -116,7 +119,8 @@ namespace Nop.Services.Common
             TaxSettings taxSettings,
             AddressSettings addressSettings,
             IVendorService vendorService,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            INopFileProvider fileProvider)
         {
             this._localizationService = localizationService;
             this._languageService = languageService;
@@ -142,10 +146,11 @@ namespace Nop.Services.Common
             this._addressSettings = addressSettings;
             this._vendorService = vendorService;
             this._vendorSettings = vendorSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
-
+        
         #region Utilities
 
         /// <summary>
@@ -169,7 +174,7 @@ namespace Nop.Services.Common
             if (fontFileName == null)
                 throw new ArgumentNullException(nameof(fontFileName));
 
-            var fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), fontFileName);
+            var fontPath = _fileProvider.Combine(_fileProvider.MapPath("~/App_Data/Pdf/"), fontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
             return font;
@@ -385,13 +390,13 @@ namespace Nop.Services.Common
 
             //created on
             cellOrderNote = GetPdfCell("PDFInvoice.OrderNotes.CreatedOn", lang, font);
-            cellOrderNote.BackgroundColor = BaseColor.LIGHT_GRAY;
+            cellOrderNote.BackgroundColor = BaseColor.LightGray;
             cellOrderNote.HorizontalAlignment = Element.ALIGN_CENTER;
             notesTable.AddCell(cellOrderNote);
 
             //note
             cellOrderNote = GetPdfCell("PDFInvoice.OrderNotes.Note", lang, font);
-            cellOrderNote.BackgroundColor = BaseColor.LIGHT_GRAY;
+            cellOrderNote.BackgroundColor = BaseColor.LightGray;
             cellOrderNote.HorizontalAlignment = Element.ALIGN_CENTER;
             notesTable.AddCell(cellOrderNote);
 
@@ -745,7 +750,7 @@ namespace Nop.Services.Common
 
             //product name
             var cellProductItem = GetPdfCell("PDFInvoice.ProductName", lang, font);
-            cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
+            cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
@@ -753,7 +758,7 @@ namespace Nop.Services.Common
             if (_catalogSettings.ShowSkuOnProductDetailsPage)
             {
                 cellProductItem = GetPdfCell("PDFInvoice.SKU", lang, font);
-                cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cellProductItem.BackgroundColor = BaseColor.LightGray;
                 cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cellProductItem);
             }
@@ -762,26 +767,26 @@ namespace Nop.Services.Common
             if (_vendorSettings.ShowVendorOnOrderDetailsPage)
             {
                 cellProductItem = GetPdfCell("PDFInvoice.VendorName", lang, font);
-                cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cellProductItem.BackgroundColor = BaseColor.LightGray;
                 cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cellProductItem);
             }
 
             //price
             cellProductItem = GetPdfCell("PDFInvoice.ProductPrice", lang, font);
-            cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
+            cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
             //qty
             cellProductItem = GetPdfCell("PDFInvoice.ProductQuantity", lang, font);
-            cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
+            cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
             //total
             cellProductItem = GetPdfCell("PDFInvoice.ProductTotal", lang, font);
-            cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
+            cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
@@ -1178,7 +1183,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(order));
 
             var fileName = $"order_{order.OrderGuid}_{CommonHelper.GenerateRandomDigitCode(4)}.pdf";
-            var filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/files/exportimport"), fileName);
+            var filePath = _fileProvider.Combine(_fileProvider.MapPath("~/wwwroot/files/exportimport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order> {order};
@@ -1206,7 +1211,7 @@ namespace Nop.Services.Common
 
             if (_pdfSettings.LetterPageSizeEnabled)
             {
-                pageSize = PageSize.LETTER;
+                pageSize = PageSize.Letter;
             }
 
             var doc = new Document(pageSize);
@@ -1216,7 +1221,7 @@ namespace Nop.Services.Common
             //fonts
             var titleFont = GetFont();
             titleFont.SetStyle(Font.BOLD);
-            titleFont.Color = BaseColor.BLACK;
+            titleFont.Color = BaseColor.Black;
             var font = GetFont();
             var attributesFont = GetFont();
             attributesFont.SetStyle(Font.ITALIC);
@@ -1283,7 +1288,7 @@ namespace Nop.Services.Common
 
             if (_pdfSettings.LetterPageSizeEnabled)
             {
-                pageSize = PageSize.LETTER;
+                pageSize = PageSize.Letter;
             }
 
             var doc = new Document(pageSize);
@@ -1293,7 +1298,7 @@ namespace Nop.Services.Common
             //fonts
             var titleFont = GetFont();
             titleFont.SetStyle(Font.BOLD);
-            titleFont.Color = BaseColor.BLACK;
+            titleFont.Color = BaseColor.Black;
             var font = GetFont();
             var attributesFont = GetFont();
             attributesFont.SetStyle(Font.ITALIC);
@@ -1391,19 +1396,19 @@ namespace Nop.Services.Common
 
                 //product name
                 var cell = GetPdfCell("PDFPackagingSlip.ProductName", lang, font);
-                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
                 //SKU
                 cell = GetPdfCell("PDFPackagingSlip.SKU", lang, font);
-                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
                 //qty
                 cell = GetPdfCell("PDFPackagingSlip.QTY", lang, font);
-                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
@@ -1483,7 +1488,7 @@ namespace Nop.Services.Common
 
             if (_pdfSettings.LetterPageSizeEnabled)
             {
-                pageSize = PageSize.LETTER;
+                pageSize = PageSize.Letter;
             }
 
             var doc = new Document(pageSize);
@@ -1493,7 +1498,7 @@ namespace Nop.Services.Common
             //fonts
             var titleFont = GetFont();
             titleFont.SetStyle(Font.BOLD);
-            titleFont.Color = BaseColor.BLACK;
+            titleFont.Color = BaseColor.Black;
             var font = GetFont();
 
             var productNumber = 1;
