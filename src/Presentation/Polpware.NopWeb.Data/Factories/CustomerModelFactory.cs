@@ -25,7 +25,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Framework.Security.Captcha;
 using Polpware.NopWeb.Models.Common;
 using Polpware.NopWeb.Models.Customer;
 

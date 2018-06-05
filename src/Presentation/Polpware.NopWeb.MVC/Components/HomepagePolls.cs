@@ -18,7 +18,7 @@ namespace Polpware.NopWeb.Components
         {
             var model = _pollModelFactory.PrepareHomePagePollModels();
             if (!model.Any())
-                Content("");
+                return Content("");
 
             return View(model);
         }

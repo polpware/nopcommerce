@@ -18,7 +18,7 @@ namespace Polpware.NopWeb.Components
             var model = _commonModelFactory.PrepareLanguageSelectorModel();
 
             if (model.AvailableLanguages.Count == 1)
-                Content("");
+                return Content("");
 
             return View(model);
         }

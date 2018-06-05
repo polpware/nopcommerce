@@ -10,6 +10,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
@@ -24,7 +25,6 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using Nop.Web.Framework.Security.Captcha;
 using Polpware.NopWeb.Infrastructure.Cache;
 using Polpware.NopWeb.Models.Catalog;
 using Polpware.NopWeb.Models.Common;
@@ -285,10 +285,8 @@ namespace Polpware.NopWeb.Factories
                     var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal taxRate);
                     var finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
-                    var oldPrice =
-                        _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                    var finalPrice =
-                        _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+                    var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                    var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                     //do we have tier prices configured?
                     var tierPrices = new List<TierPrice>();
@@ -340,7 +338,7 @@ namespace Polpware.NopWeb.Factories
                     priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPriceBase, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
                 }
             }
             else
@@ -424,7 +422,7 @@ namespace Polpware.NopWeb.Factories
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
+                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPriceBase,
                         _localizationService, _measureService, _currencyService, _workContext,
                         _priceFormatter);
                 }
