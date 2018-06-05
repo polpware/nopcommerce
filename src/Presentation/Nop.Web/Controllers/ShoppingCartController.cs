@@ -12,6 +12,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
@@ -55,6 +56,7 @@ namespace Nop.Web.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
+        private readonly IMeasureService _measureService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
@@ -91,7 +93,8 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService, 
             IProductAttributeService productAttributeService, 
             IProductAttributeParser productAttributeParser,
-            ITaxService taxService, ICurrencyService currencyService, 
+            ITaxService taxService, ICurrencyService currencyService,
+            IMeasureService measureService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             ICheckoutAttributeParser checkoutAttributeParser,
@@ -125,6 +128,7 @@ namespace Nop.Web.Controllers
             this._productAttributeParser = productAttributeParser;
             this._taxService = taxService;
             this._currencyService = currencyService;
+            this._measureService = measureService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
             this._checkoutAttributeParser = checkoutAttributeParser;
@@ -969,6 +973,8 @@ namespace Nop.Web.Controllers
 
             //price
             var price = "";
+            //base price
+            var basepricepangv = "";
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
@@ -982,6 +988,8 @@ namespace Nop.Web.Controllers
                 var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                basepricepangv = product.FormatBasePrice(finalPriceWithDiscountBase, _localizationService,
+                    _measureService, _currencyService, _workContext, _priceFormatter);
             }
 
             //stock
@@ -1055,6 +1063,7 @@ namespace Nop.Web.Controllers
                 mpn,
                 sku,
                 price,
+                basepricepangv,
                 stockAvailability,
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
