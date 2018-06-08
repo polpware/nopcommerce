@@ -7,6 +7,7 @@ namespace Polpware.NopWeb.Controllers
     public partial class HomeController : BasePublicController
     {
         [HttpsRequirement(SslRequirement.No)]
+        [NamespaceConstraint]
         public virtual IActionResult Index()
         {
             return View();
