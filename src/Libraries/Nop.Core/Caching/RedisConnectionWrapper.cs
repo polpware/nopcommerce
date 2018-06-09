@@ -11,16 +11,15 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents Redis connection wrapper implementation
     /// </summary>
-    public class RedisConnectionWrapper : IRedisConnectionWrapper
+    public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     {
         #region Fields
 
         private readonly NopConfig _config;
-
         private readonly Lazy<string> _connectionString;
+        private readonly object _lock = new object();
         private volatile ConnectionMultiplexer _connection;
         private volatile RedLockFactory _redisLockFactory;
-        private readonly object _lock = new object();
 
         #endregion
 

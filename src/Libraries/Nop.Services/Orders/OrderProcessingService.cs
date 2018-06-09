@@ -117,7 +117,7 @@ namespace Nop.Services.Orders
         /// <param name="customerActivityService">Customer activity service</param>
         /// <param name="currencyService">Currency service</param>
         /// <param name="affiliateService">Affiliate service</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="pdfService">PDF service</param>
         /// <param name="rewardPointService">Reward point service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
@@ -475,7 +475,7 @@ namespace Nop.Services.Orders
             {
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer,
                     sci.ShoppingCartType, sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
-                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
+                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
                 if (sciWarnings.Any())
                     throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
             }
@@ -1165,7 +1165,8 @@ namespace Nop.Services.Orders
                     if (add)
                     {
                         //add
-                        customer.CustomerRoles.Add(customerRole);
+                        //customer.CustomerRoles.Add(customerRole);
+                        customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                     }
                 }
                 else
@@ -1174,7 +1175,9 @@ namespace Nop.Services.Orders
                     if (!add)
                     {
                         //remove
-                        customer.CustomerRoles.Remove(customerRole);
+                        //customer.CustomerRoles.Remove(customerRole);
+                        customer.CustomerCustomerRoleMappings
+                            .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
                     }
                 }
             }
@@ -1429,7 +1432,7 @@ namespace Nop.Services.Orders
                 _giftCardService.UpdateGiftCard(agc.GiftCard);
             }
         }
-
+       
         /// <summary>
         /// Save discount usage history
         /// </summary>
@@ -1645,7 +1648,7 @@ namespace Nop.Services.Orders
             if (!itemDeleted)
                 updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartItemWarnings(updatedOrder.Customer, updatedShoppingCartItem.ShoppingCartType,
                     updatedShoppingCartItem.Product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
-                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false));
+                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
 
             _orderTotalCalculationService.UpdateOrderTotals(updateOrderParameters, restoredCart);
 
@@ -2226,6 +2229,12 @@ namespace Nop.Services.Orders
 
             //return (add) back redeemded reward points
             ReturnBackRedeemedRewardPoints(order);
+
+            //delete gift card usage history
+            if (_orderSettings.DeleteGiftCardUsageHistory)
+            {
+                _giftCardService.DeleteGiftCardUsageHistory(order);
+            }
 
             //cancel recurring payments
             var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);
