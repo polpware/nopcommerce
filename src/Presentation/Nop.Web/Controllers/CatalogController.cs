@@ -114,7 +114,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 
@@ -159,7 +159,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
@@ -199,7 +199,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
@@ -255,7 +255,7 @@ namespace Nop.Web.Controllers
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 
@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers
 
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
-                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;            
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
@@ -282,13 +282,16 @@ namespace Nop.Web.Controllers
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
+            var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
+
             var models =  _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
             var result = (from p in models
                     select new
                     {
                         label = p.Name,
                         producturl = Url.RouteUrl("Product", new {SeName = p.SeName}),
-                        productpictureurl = p.DefaultPictureModel.ImageUrl
+                        productpictureurl = p.DefaultPictureModel.ImageUrl,
+                        showlinktoresultsearch = showLinkToResultSearch
                     })
                 .ToList();
             return Json(result);

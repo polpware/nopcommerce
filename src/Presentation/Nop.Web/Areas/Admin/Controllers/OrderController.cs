@@ -23,9 +23,10 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -420,7 +421,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List(List<int> orderStatusIds = null, List<int> paymentStatusIds = null, List<int> shippingStatusIds = null)
+        public virtual IActionResult List(List<int> orderStatuses = null, List<int> paymentStatuses = null, List<int> shippingStatuses = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -428,9 +429,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _orderModelFactory.PrepareOrderSearchModel(new OrderSearchModel
             {
-                OrderStatusIds = orderStatusIds,
-                PaymentStatusIds = paymentStatusIds,
-                ShippingStatusIds = shippingStatusIds
+                OrderStatusIds = orderStatuses,
+                PaymentStatusIds = paymentStatuses,
+                ShippingStatusIds = shippingStatuses
             });
 
             return View(model);
@@ -2833,53 +2834,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _orderModelFactory.PrepareBestsellerBriefListModel(searchModel);
 
             return Json(model);
-        }
-
-        public virtual IActionResult BestsellersReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _orderModelFactory.PrepareBestsellerSearchModel(new BestsellerSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult BestsellersReportList(BestsellerSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _orderModelFactory.PrepareBestsellerListModel(searchModel);
-
-            return Json(model);
-        }
-
-        public virtual IActionResult NeverSoldReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _orderModelFactory.PrepareNeverSoldReportSearchModel(new NeverSoldReportSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult NeverSoldReportList(NeverSoldReportSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _orderModelFactory.PrepareNeverSoldReportListModel(searchModel);
-
-            return Json(model);
-        }
+        }        
 
         [HttpPost]
         public virtual IActionResult OrderAverageReportList(DataSourceRequest command)
@@ -2911,30 +2866,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _orderModelFactory.PrepareOrderIncompleteReportListModel();
 
             return Json(model);
-        }
-
-        public virtual IActionResult CountryReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _orderModelFactory.PrepareCountryReportSearchModel(new CountryReportSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult CountryReportList(CountryReportSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _orderModelFactory.PrepareCountryReportListModel(searchModel);
-
-            return Json(model);
-        }
+        }        
 
         public virtual IActionResult LoadOrderStatistics(string period)
         {
