@@ -157,6 +157,12 @@
         public static string ForumSettingsBottom => "admin_forum_settings_bottom";
         public static string ForumSettingsButtons => "admin_forum_settings_buttons";
         public static string ForumSettingsTop => "admin_forum_settings_top";
+        public static string GdprSettingsBottom => "admin_gdpr_settings_bottom";
+        public static string GdprSettingsButtons => "admin_gdpr_settings_buttons";
+        public static string GdprSettingsTop => "admin_gdpr_common_settings_top";
+        public static string GdprConsentDetailsBottom => "admin_gdpr_consent_details_bottom";
+        public static string GdprConsentDetailsButtons => "admin_gdpr_consent_details_buttons";
+        public static string GdprConsentDetailsTop => "admin_gdpr_consent_details_top";
         public static string GeneralCommonSettingsBottom => "admin_general_common_settings_bottom";
         public static string GeneralCommonSettingsButtons => "admin_general_common_settings_buttons";
         public static string GeneralCommonSettingsTop => "admin_general_common_settings_top";
@@ -239,8 +245,11 @@
         public static string OrderShipmentDetailsButtons => "admin_order_shipment_details_buttons";
         public static string OrderShipmentListButtons => "admin_order_shipment_list_buttons";
         public static string OrderUploadLicenseButtons => "admin_order_upload_license_buttons";
-        public static string PaymentMethodListButtons => "admin_payment_method_list_buttons";
-        public static string PaymentMethodRestrictionsListButtons => "admin_payment_method_restrictions_list_buttons";
+        public static string PaymentsListButtons => "admin_payments_list_buttons";
+        public static string PaymentMethodListTop => "admin_payment_method_list_top";
+        public static string PaymentMethodListBottom => "admin_payment_method_list_bottom";
+        public static string PaymentMethodRestrictionsTop => "admin_payment_method_restrictions_top";
+        public static string PaymentMethodRestrictionsBottom => "admin_payment_method_restrictions_bottom";
         public static string PermissionListButtons => "admin_permission_list_buttons";
         public static string PickupPointProviderListButtons => "admin_pickup_point_provider_list_buttons";
         public static string PluginDetailsBottom => "admin_plugin_details_bottom";
