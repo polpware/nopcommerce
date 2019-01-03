@@ -30,6 +30,8 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         private IServiceProvider _serviceProvider { get; set; }
 
+        private IContainer _container;
+
         #endregion
 
         #region Utilities
@@ -99,7 +101,8 @@ namespace Nop.Core.Infrastructure
             containerBuilder.Populate(services);
 
             //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
+            _container = containerBuilder.Build();
+            _serviceProvider = new AutofacServiceProvider(_container);
             return _serviceProvider;
         }
 
@@ -306,6 +309,8 @@ namespace Nop.Core.Infrastructure
         /// Service provider
         /// </summary>
         public virtual IServiceProvider ServiceProvider => _serviceProvider;
+
+        public virtual IContainer Container => _container;
 
         #endregion
     }
