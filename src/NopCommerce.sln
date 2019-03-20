@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -96,6 +96,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.YaoseeOAuth.WebFramework", "Yaosee\OAuth\Nop.YaoseeOAuth.WebFramework\Nop.YaoseeOAuth.WebFramework.csproj", "{8E6B3DD6-F89C-406D-AD16-18CA9B7C86DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.YaoseeOAuth.Service", "Yaosee\OAuth\Nop.YaoseeOAuth.Service\Nop.YaoseeOAuth.Service.csproj", "{E85E76C7-052F-47D7-8457-0D943EB5444B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{AD2A33EC-7EE8-4333-9F07-39D659ABD74D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaosee.Messaging", "Yaosee\Libraries\Yaosee.Messaging\Yaosee.Messaging.csproj", "{6DE61A04-A761-466B-BEAD-42B431D13E70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -527,6 +531,18 @@ Global
 		{E85E76C7-052F-47D7-8457-0D943EB5444B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E85E76C7-052F-47D7-8457-0D943EB5444B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E85E76C7-052F-47D7-8457-0D943EB5444B}.Release|x86.Build.0 = Release|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Debug|x86.Build.0 = Debug|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Release|x86.ActiveCfg = Release|Any CPU
+		{6DE61A04-A761-466B-BEAD-42B431D13E70}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -574,6 +590,8 @@ Global
 		{B18F9871-6151-400C-809E-1A8F5B60C9AC} = {ABA90C5B-260C-4D81-88A9-552D3FF1EC44}
 		{8E6B3DD6-F89C-406D-AD16-18CA9B7C86DE} = {ABA90C5B-260C-4D81-88A9-552D3FF1EC44}
 		{E85E76C7-052F-47D7-8457-0D943EB5444B} = {ABA90C5B-260C-4D81-88A9-552D3FF1EC44}
+		{AD2A33EC-7EE8-4333-9F07-39D659ABD74D} = {14E8E24F-F8A3-44E6-BF85-98C435E538D0}
+		{6DE61A04-A761-466B-BEAD-42B431D13E70} = {AD2A33EC-7EE8-4333-9F07-39D659ABD74D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EB971A13-D440-4728-800B-E2AA43D33F82}
