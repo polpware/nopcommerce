@@ -208,6 +208,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
         }
 
+        // Note that after upgrading to the new mini package from the alpha one, the following one breaks.
+        // So we disable it.
+#if false
         /// <summary>
         /// Create and configure MiniProfiler service
         /// </summary>
@@ -233,5 +236,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 });
             }
         }
+#endif
     }
 }

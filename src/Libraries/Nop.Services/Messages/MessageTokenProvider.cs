@@ -115,9 +115,9 @@ namespace Nop.Services.Messages
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="storeInformationSettings">StoreInformation settings</param>
         public MessageTokenProvider(ILanguageService languageService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter, 
+            IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
             IWorkContext workContext,
             IDownloadService downloadService,
@@ -454,7 +454,7 @@ namespace Nop.Services.Messages
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Convert a collection to a HTML table
         /// </summary>
@@ -468,7 +468,7 @@ namespace Nop.Services.Messages
 
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-            
+
             sb.AppendLine($"<tr style=\"background-color:{_templatesSettings.Color1};text-align:center;\">");
             sb.AppendLine($"<th>{_localizationService.GetResource("Messages.Order.Product(s).Name", languageId)}</th>");
             sb.AppendLine($"<th>{_localizationService.GetResource("Messages.Order.Product(s).Price", languageId)}</th>");
@@ -490,7 +490,7 @@ namespace Nop.Services.Messages
                 sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
                 //product name
                 var productName = product.GetLocalized(x => x.Name, languageId);
-                
+
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
                 //add download link
@@ -554,7 +554,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine($"<td style=\"padding: 0.6em 0.4em;text-align: center;\">{orderItem.Quantity}</td>");
 
-                string priceStr; 
+                string priceStr;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -575,7 +575,7 @@ namespace Nop.Services.Messages
             if (vendorId == 0)
             {
                 //we render checkout attributes and totals only for store owners (hide for vendors)
-            
+
                 if (!string.IsNullOrEmpty(order.CheckoutAttributeDescription))
                 {
                     sb.AppendLine("<tr><td style=\"text-align:right;\" colspan=\"1\">&nbsp;</td><td colspan=\"3\" style=\"text-align:right\">");
@@ -796,7 +796,7 @@ namespace Nop.Services.Messages
         {
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-            
+
             sb.AppendLine($"<tr style=\"background-color:{_templatesSettings.Color1};text-align:center;\">");
             sb.AppendLine($"<th>{_localizationService.GetResource("Messages.Order.Product(s).Name", languageId)}</th>");
             sb.AppendLine($"<th>{_localizationService.GetResource("Messages.Order.Product(s).Quantity", languageId)}</th>");
@@ -817,7 +817,7 @@ namespace Nop.Services.Messages
                 sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
                 //product name
                 var productName = product.GetLocalized(x => x.Name, languageId);
-                
+
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
                 //attributes
@@ -852,7 +852,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine("</tr>");
             }
-            
+
             sb.AppendLine("</table>");
             var result = sb.ToString();
             return result;
@@ -874,7 +874,7 @@ namespace Nop.Services.Messages
             //ensure that the store URL is specified
             if (string.IsNullOrEmpty(store.Url))
                 throw new Exception("URL cannot be null");
-            
+
             //generate a URL with an absolute path
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
@@ -882,7 +882,7 @@ namespace Nop.Services.Messages
             //remove the application path from the generated URL if exists
             var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
             url.StartsWithSegments(pathBase, out url);
-            
+
             //compose the result
             return Uri.EscapeUriString(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"));
         }
@@ -993,7 +993,7 @@ namespace Nop.Services.Messages
             {
                 tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
             }
-            
+
             var orderUrl = RouteUrl(order.StoreId, "OrderDetails", new { orderId = order.Id });
             tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
 
@@ -1074,7 +1074,7 @@ namespace Nop.Services.Messages
         public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
         {
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id));
-            tokens.Add(new Token("RecurringPayment.CancelAfterFailedPayment", 
+            tokens.Add(new Token("RecurringPayment.CancelAfterFailedPayment",
                 recurringPayment.LastPaymentFailed && _paymentSettings.CancelRecurringPaymentsAfterFailedPayment));
             if (recurringPayment.InitialOrder != null)
                 tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).ToString()));
@@ -1119,7 +1119,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.Amount", _priceFormatter.FormatPrice(giftCard.Amount, true, false)));
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
-            var giftCardMesage = !string.IsNullOrWhiteSpace(giftCard.Message) ? 
+            var giftCardMesage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
                 HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
 
             tokens.Add(new Token("GiftCard.Message", giftCardMesage, true));
@@ -1145,7 +1145,7 @@ namespace Nop.Services.Messages
 
             var customAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes);
             tokens.Add(new Token("Customer.CustomAttributes", _customerAttributeFormatter.FormatAttributes(customAttributesXml), true));
-            
+
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
             var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), email = customer.Email });
             var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), email = customer.Email });
@@ -1252,7 +1252,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ShortDescription", product.GetLocalized(x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", product.GetTotalStockQuantity()));
-            
+
             var productUrl = RouteUrl(routeName: "Product", routeValues: new { SeName = product.GetSeName() });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
@@ -1272,15 +1272,15 @@ namespace Nop.Services.Messages
             //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.
             //that's why we resolve it here this way
             var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
-            var attributes = productAttributeFormatter.FormatAttributes(combination.Product, 
-                combination.AttributesXml, 
-                _workContext.CurrentCustomer, 
+            var attributes = productAttributeFormatter.FormatAttributes(combination.Product,
+                combination.AttributesXml,
+                _workContext.CurrentCustomer,
                 renderPrices: false);
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
             tokens.Add(new Token("AttributeCombination.SKU", combination.Product.FormatSku(combination.AttributesXml, _productAttributeParser)));
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity));
-            
+
             //event notification
             _eventPublisher.EntityTokensAdded(combination, tokens);
         }
@@ -1292,7 +1292,7 @@ namespace Nop.Services.Messages
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="appendedPostIdentifierAnchor">Forum post identifier</param>
-        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
+        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
             string topicUrl;
@@ -1399,7 +1399,7 @@ namespace Nop.Services.Messages
 
             return allowedTokens.Distinct();
         }
-        
+
         #endregion
     }
 }

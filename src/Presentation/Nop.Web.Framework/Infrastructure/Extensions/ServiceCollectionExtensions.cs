@@ -3,7 +3,7 @@ using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Create, bind and register as service the specified configuration parameters 
+        /// Create, bind and register as service the specified configuration parameters
         /// </summary>
         /// <typeparam name="TConfig">Configuration parameters</typeparam>
         /// <param name="services">Collection of service descriptors</param>
@@ -218,7 +218,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
-            
+
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
