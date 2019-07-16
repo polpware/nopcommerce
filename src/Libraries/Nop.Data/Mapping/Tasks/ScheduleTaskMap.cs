@@ -10,6 +10,8 @@ namespace Nop.Data.Mapping.Tasks
             this.HasKey(t => t.Id);
             this.Property(t => t.Name).IsRequired();
             this.Property(t => t.Type).IsRequired();
+            this.Ignore(a => a.LeasedByMachineName);
+            this.Ignore(a => a.LeasedUntilUtc);
         }
     }
 }

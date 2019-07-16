@@ -12,17 +12,17 @@ namespace Nop.Services.Tasks
     public partial class TaskManager
     {
         private static readonly TaskManager _taskManager = new TaskManager();
-        private readonly List<TaskThread> _taskThreads = new List<TaskThread>();
-        private const int _notRunTasksInterval = 60 * 30; //30 minutes
+        protected readonly List<TaskThread> _taskThreads = new List<TaskThread>();
+        protected const int _notRunTasksInterval = 60 * 30; //30 minutes
 
-        private TaskManager()
+        protected TaskManager()
         {
         }
-        
+
         /// <summary>
         /// Initializes the task manager
         /// </summary>
-        public void Initialize()
+        public virtual void Initialize()
         {
             this._taskThreads.Clear();
 

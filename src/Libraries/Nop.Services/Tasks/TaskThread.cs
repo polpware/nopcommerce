@@ -10,17 +10,17 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class TaskThread : IDisposable
     {
-        private Timer _timer;
+        protected Timer _timer;
         private bool _disposed;
-        private readonly Dictionary<string, Task> _tasks;
+        protected readonly Dictionary<string, Task> _tasks;
 
-        internal TaskThread()
+        public TaskThread()
         {
             this._tasks = new Dictionary<string, Task>();
             this.Seconds = 10 * 60;
         }
 
-        private void Run()
+        protected virtual void Run()
         {
             if (Seconds <= 0)
                 return;
@@ -34,7 +34,7 @@ namespace Nop.Services.Tasks
             this.IsRunning = false;
         }
 
-        private void TimerHandler(object state)
+        protected void TimerHandler(object state)
         {
             this._timer.Change(-1, -1);
             this.Run();
@@ -67,7 +67,7 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Inits a timer
         /// </summary>
-        public void InitTimer()
+        public virtual void InitTimer()
         {
             if (this._timer == null)
             {
@@ -96,12 +96,12 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Get or sets a datetime when thread has been started
         /// </summary>
-        public DateTime StartedUtc { get; private set; }
+        public DateTime StartedUtc { get; protected set; }
 
         /// <summary>
         /// Get or sets a value indicating whether thread is running
         /// </summary>
-        public bool IsRunning { get; private set; }
+        public bool IsRunning { get; protected set; }
 
         /// <summary>
         /// Get a list of tasks
