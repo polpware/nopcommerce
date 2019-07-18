@@ -28,7 +28,7 @@ namespace Nop.Web.Framework
     {
         #region Const
 
-        private const string CUSTOMER_COOKIE_NAME = ".Nop.Customer";
+        protected static string CUSTOMER_COOKIE_NAME = ".Nop.Customer";
 
         #endregion
 
