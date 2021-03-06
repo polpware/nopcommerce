@@ -57,8 +57,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 //implement schedule tasks
                 //database is already installed, so start scheduled tasks
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
+                // TaskManager.Instance.Initialize();
+                // TaskManager.Instance.Start();
 
                 //log application start
                 EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
