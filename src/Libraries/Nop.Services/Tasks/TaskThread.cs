@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using Nop.Core;
 using Nop.Core.Domain.Tasks;
@@ -51,17 +52,20 @@ namespace Nop.Services.Tasks
             IsRunning = true;
             foreach (var taskType in _tasks.Values)
             {
+                var contentType = new StringContent("");
                 //create and send post data
+                /*
                 var postData = new NameValueCollection
                 {
                     {"taskType", taskType}
-                };
+                }; */
 
                 try
                 {
-                    using (var client = new WebClient())
+                    var url = _scheduleTaskUrl + "?taskType=" + taskType;
+                    using (var client = new HttpClient())
                     {
-                        client.UploadValues(_scheduleTaskUrl, postData);
+                        client.PostAsync(url, contentType);
                     }
                 }
                 catch (Exception ex)
