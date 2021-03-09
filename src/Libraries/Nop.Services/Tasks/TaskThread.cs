@@ -29,7 +29,7 @@ namespace Nop.Services.Tasks
         static TaskThread()
         {
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            _scheduleTaskUrl = /* storeContext.CurrentStore.Url8 */ "https://tasks.preworkscreen.com/" + TaskManager.ScheduleTaskPath;
+            _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPath;
         }
 
         internal TaskThread()
@@ -49,8 +49,15 @@ namespace Nop.Services.Tasks
 
             StartedUtc = DateTime.UtcNow;
             IsRunning = true;
-            foreach (var taskType in _tasks.Values)
+            foreach (var t in _tasks)
             {
+                var taskType = t.Value;
+                var url = _scheduleTaskUrl;
+                if (t.Key.Contains("secondary"))
+                {
+                    url = TaskManager.ScheduleTaskPath;
+                }
+
                 //create and send post data
                 var postData = new NameValueCollection
                 {
@@ -61,7 +68,7 @@ namespace Nop.Services.Tasks
                 {
                     using (var client = new WebClient())
                     {
-                        client.UploadValues(_scheduleTaskUrl, postData);
+                        client.UploadValues(url, postData);
                     }
                 }
                 catch (Exception ex)
