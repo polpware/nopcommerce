@@ -55,7 +55,7 @@ namespace Nop.Services.Tasks
                 var url = _scheduleTaskUrl;
                 if (t.Key.Contains("secondary"))
                 {
-                    url = TaskManager.ScheduleTaskPath;
+                    url = "https://tasks.preworkscreen.com/" + TaskManager.ScheduleTaskPath;
                 }
 
                 //create and send post data
