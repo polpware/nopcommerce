@@ -69,7 +69,7 @@ namespace Nop.Services.Tasks
 
             var query = _taskRepository.Table;
             query = query.Where(st => st.Type == type);
-            query = query.OrderByDescending(t => t.Id);
+            query = query.OrderBy(t => t.Id);
 
             var task = query.FirstOrDefault();
             return task;
