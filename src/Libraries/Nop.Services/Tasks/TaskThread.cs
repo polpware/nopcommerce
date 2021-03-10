@@ -29,7 +29,7 @@ namespace Nop.Services.Tasks
         static TaskThread()
         {
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            _scheduleTaskUrl = /* storeContext.CurrentStore.Url */ "https://preworkscreen.com/" + TaskManager.ScheduleTaskPath;
+            _scheduleTaskUrl = /* storeContext.CurrentStore.Url */ "https://tasks.preworkscreen.com/" + TaskManager.ScheduleTaskPath;
         }
 
         internal TaskThread()
@@ -53,10 +53,11 @@ namespace Nop.Services.Tasks
             {
                 var taskType = t.Value;
                 var url = _scheduleTaskUrl;
+                /*
                 if (t.Key.Contains("secondary"))
                 {
                     url = "https://tasks.preworkscreen.com/" + TaskManager.ScheduleTaskPath;
-                }
+                } */
 
                 //create and send post data
                 var postData = new NameValueCollection
