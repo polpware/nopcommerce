@@ -119,8 +119,8 @@ namespace Nop.Data
 
             try
             {
-                Entities.Update(entity);
-                _context.SaveChanges();
+                // Entities.Update(entity);
+                // _context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
