@@ -391,12 +391,12 @@ namespace Nop.Core.Plugins
                     Debug.WriteLine("Creating shadow copy folder and querying for DLLs");
                     //ensure folders are created
                     _fileProvider.CreateDirectory(pluginFolder);
-                    _fileProvider.CreateDirectory(_shadowCopyFolder);
                     
                     //get list of all files in bin
-                    var binFiles = _fileProvider.GetFiles(_shadowCopyFolder, "*", false);
                     if (config.ClearPluginShadowDirectoryOnStartup)
                     {
+                        _fileProvider.CreateDirectory(_shadowCopyFolder);
+                        var binFiles = _fileProvider.GetFiles(_shadowCopyFolder, "*", false);
                         //clear out shadow copied plugins
                         foreach (var f in binFiles)
                         {
@@ -461,6 +461,8 @@ namespace Nop.Core.Plugins
                             var directoryName = _fileProvider.GetDirectoryName(descriptionFile);
                             if (string.IsNullOrEmpty(directoryName))
                                 throw new Exception($"Directory cannot be resolved for '{_fileProvider.GetFileName(descriptionFile)}' description file");
+
+                            var binFiles = _fileProvider.GetFiles(_shadowCopyFolder, "*", false);
 
                             //get list of all DLLs in plugins (not in bin!)
                             var pluginFiles = _fileProvider.GetFiles(directoryName, "*.dll", false)
