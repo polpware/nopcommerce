@@ -265,9 +265,7 @@ namespace Nop.Web.Framework
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
                 {
                     //create guest if not exists
-                    // customer = _customerService.InsertGuestCustomer();
-                    // Get a dummy one 
-                    customer = _customerService.GetCustomerByEmail("Info@InfoBeyondtech.com");
+                    customer = _customerService.InsertGuestCustomer();
                 }
 
                 if (!customer.Deleted && customer.Active && !customer.RequireReLogin)

@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
-                    // _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
             }
 
