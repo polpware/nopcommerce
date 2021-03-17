@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -22,6 +25,7 @@ namespace Nop.Services.Customers
         private const int SALT_KEY_SIZE = 5;
 
         private readonly ICustomerService _customerService;
+        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IEncryptionService _encryptionService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
@@ -53,7 +57,8 @@ namespace Nop.Services.Customers
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
-        public CustomerRegistrationService(ICustomerService customerService, 
+        public CustomerRegistrationService(ICustomerService customerService,
+            IRepository<CustomerPassword> passwordRepository,
             IEncryptionService encryptionService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ILocalizationService localizationService,
@@ -67,6 +72,7 @@ namespace Nop.Services.Customers
             CustomerSettings customerSettings)
         {
             this._customerService = customerService;
+            this._customerPasswordRepository = passwordRepository;
             this._encryptionService = encryptionService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
@@ -144,7 +150,7 @@ namespace Nop.Services.Customers
             if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
                 return CustomerLoginResults.LockedOut;
 
-            if (!PasswordsMatch(_customerService.GetCurrentPassword(customer.Id), password))
+            if (!PasswordsMatch(GetCurrentPassword(customer.Id), password))
             {
                 //wrong password
                 customer.FailedLoginAttempts++;
@@ -171,6 +177,34 @@ namespace Nop.Services.Customers
             return CustomerLoginResults.Successful;
         }
 
+        private CustomerPassword GetCurrentPassword(int customerId)
+        {
+            if (customerId == 0)
+                return null;
+
+            //return the latest password
+            return GetCustomerPasswords(customerId, passwordsToReturn: 1).FirstOrDefault();
+        }
+
+        private IList<CustomerPassword> GetCustomerPasswords(int? customerId = null,
+            PasswordFormat? passwordFormat = null, int? passwordsToReturn = null)
+        {
+            var query = _customerPasswordRepository.Table;
+
+            //filter by customer
+            if (customerId.HasValue)
+                query = query.Where(password => password.CustomerId == customerId.Value);
+
+            //filter by password format
+            if (passwordFormat.HasValue)
+                query = query.Where(password => password.PasswordFormatId == (int)(passwordFormat.Value));
+
+            //get the latest passwords
+            if (passwordsToReturn.HasValue)
+                query = query.OrderByDescending(password => password.CreatedOnUtc).Take(passwordsToReturn.Value);
+
+            return query.AsNoTracking().ToList();
+        }
         /// <summary>
         /// Register customer
         /// </summary>
