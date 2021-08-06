@@ -179,6 +179,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
+            application.UseMiddleware<AttemptReadTokenFromCookieMiddleware>();
+
             application.UseMiddleware<AuthenticationMiddleware>();
         }
 
